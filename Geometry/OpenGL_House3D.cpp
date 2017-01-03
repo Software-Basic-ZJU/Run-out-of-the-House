@@ -27,14 +27,19 @@ Sphere *sphere = new Sphere(2);
 Cylinder *cylinder = new Cylinder(2,8);
 Cone *cone = new Cone(1.5, 5, 50, 2, 2, 2);
 
-GLfloat vertex[][2] = {
+
+// 棱柱(棱台)测试
+GLfloat testBtm[][2] = {
 	{ 2, 2 },
 	{ 2, -2 },
 	{0,0}
 };
-
-Prism *prism = new Prism(vertex, 4, 5, 30);
-
+GLfloat testTop[][2] = {
+	{ 3, 3 },
+	{3,-3},
+	{0,0}
+};
+Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
 
 //显示列表
 GLint GenTableList(){

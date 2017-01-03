@@ -1,14 +1,23 @@
 #include "Prism.h"
 
-Prism::Prism(GLfloat vertexArr[][2],int vertNum,GLfloat height, GLfloat angleX, GLfloat angleZ,
-	GLfloat x, GLfloat y, GLfloat z) :Geometry(x, y, z){
-	GLfloat **vertexes = new GLfloat*[vertNum];
+Prism::Prism(GLfloat btmVertexArr[][2],int vertNum,GLfloat height, GLfloat topVertexArr[][2],
+	GLfloat angleX, GLfloat angleZ, GLfloat x, GLfloat y, GLfloat z) :Geometry(x, y, z){
+	this->btmVertexArr = new GLfloat*[vertNum];
+	if (topVertexArr != NULL)
+		this->topVertexArr = new GLfloat*[vertNum];
+	else
+		this->topVertexArr = this->btmVertexArr;
+
 	for (int i = 0; i < vertNum; i++){
-		vertexes[i] = new GLfloat[2];
-		vertexes[i][0] = vertexArr[i][0];
-		vertexes[i][1] = vertexArr[i][1];
+		this->btmVertexArr[i] = new GLfloat[2];
+		this->btmVertexArr[i][0] = btmVertexArr[i][0];
+		this->btmVertexArr[i][1] = btmVertexArr[i][1];
+		if (topVertexArr != NULL){
+			this->topVertexArr[i] = new GLfloat[2];
+			this->topVertexArr[i][0] = topVertexArr[i][0];
+			this->topVertexArr[i][1] = topVertexArr[i][1];
+		}
 	}
-	this->vertexArr = vertexes;
 	this->vertNum = vertNum;
 	this->height = height;
 	this->angleX = angleX;
@@ -22,23 +31,23 @@ void Prism::drawPrism(){
 	
 	glBegin(GL_POLYGON);
 	for (int index = 0; index < vertNum; index++){
-		glVertex3f(this->vertexArr[index][0], 0, this->vertexArr[index][1]);
+		glVertex3f(this->btmVertexArr[index][0], 0, this->btmVertexArr[index][1]);
 	}
 	glEnd();
 
 	glBegin(GL_POLYGON);
 	for (int index = 0; index < vertNum; index++){
-		glVertex3f(offsetX + this->vertexArr[index][0], this->height, offsetZ + this->vertexArr[index][1]);
+		glVertex3f(offsetX + this->topVertexArr[index][0], this->height, offsetZ + this->topVertexArr[index][1]);
 	}
 	glEnd();
 
 	for (int curr = 0; curr < vertNum; curr++){
 		int next = curr + 1 < vertNum ? curr + 1 : 0;
 		glBegin(GL_POLYGON);
-		glVertex3f(this->vertexArr[curr][0], 0, this->vertexArr[curr][1]);
-		glVertex3f(this->vertexArr[next][0], 0, this->vertexArr[next][1]);
-		glVertex3f(offsetX + this->vertexArr[next][0], this->height, offsetZ + this->vertexArr[next][1]);
-		glVertex3f(offsetX + this->vertexArr[curr][0], this->height, offsetZ + this->vertexArr[curr][1]);
+		glVertex3f(this->btmVertexArr[curr][0], 0, this->btmVertexArr[curr][1]);
+		glVertex3f(this->btmVertexArr[next][0], 0, this->btmVertexArr[next][1]);
+		glVertex3f(offsetX + this->topVertexArr[next][0], this->height, offsetZ + this->topVertexArr[next][1]);
+		glVertex3f(offsetX + this->topVertexArr[curr][0], this->height, offsetZ + this->topVertexArr[curr][1]);
 		glEnd();
 	}
 }
