@@ -1,8 +1,8 @@
-#include "Cubic.h"
-#include "Sphere.h"
-#include "Cylinder.h"
-#include "Cone.h"
-#include "Prism.h"
+#include "Geometry\Cubic.h"
+#include "Geometry\Cone.h"
+#include "Geometry\Cylinder.h"
+#include "Geometry\Prism.h"
+#include "Geometry\Sphere.h"
 
 float fTranslate;
 float fRotate;
@@ -42,7 +42,7 @@ GLfloat testTop[][2] = {
 Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
 
 //显示列表
-GLint GenTableList(){
+GLint HouseList(){
 	GLint lid = glGenLists(1);
 	glNewList(lid, GL_COMPILE);
 	
@@ -60,10 +60,6 @@ GLint GenTableList(){
 	return lid;
 }
 
-void Draw_List(){
-	glCallList(tableList);
-}
-
 void Draw_Triangle() // This function draws a triangle with RGB colors
 {
 	glPushMatrix();
@@ -72,7 +68,7 @@ void Draw_Triangle() // This function draws a triangle with RGB colors
 	glutSolidTeapot(1);
 	glPopMatrix();
 
-	Draw_List();		//显示列表
+	glCallList(tableList);		//显示列表
 
 }
 
@@ -212,7 +208,7 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(480, 480);
 	int windowHandle = glutCreateWindow("Simple GLUT App");
 
-	tableList = GenTableList();			//开启显示列表
+	tableList = HouseList();			//房间显示列表
 
 	glutDisplayFunc(redraw);
 	glutReshapeFunc(reshape);
