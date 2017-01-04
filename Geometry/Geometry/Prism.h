@@ -1,7 +1,6 @@
 #include "Geometry.h"
 
 // 仅支持凸多边形的棱柱棱台
-
 // 底面各顶点坐标，传入时须平行于xOz平面!!!!!!!!!!!!!!!!!!!!!!!!
 class Prism :public Geometry{
 private:
