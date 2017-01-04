@@ -146,6 +146,6 @@ public:
 
 	void setNspice(GLfloat N);					//设置纵向切片数
 
-	void render();
+	virtual void render();
 };
 ```
