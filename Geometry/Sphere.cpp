@@ -67,7 +67,7 @@ void Sphere::render(){
 	if (this->hidden) return;
 
 	glPushMatrix();
-	//�任
+	//变换
 	glTranslatef(this->x, this->y, this->z);
 	glScalef(this->radius, this->radius, this->radius);
 	glRotatef(this->angle, this->rotX, this->rotY, this->rotZ);
