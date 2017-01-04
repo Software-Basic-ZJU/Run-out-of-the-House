@@ -62,7 +62,7 @@ public:
 	Cone(GLfloat radius = 1, GLfloat height = 1, GLint slice = 50,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);
 
-	void render();
+	virtual void render();
 };
 ```
 
@@ -79,7 +79,7 @@ public:
 	Cubic(GLfloat length, GLfloat width, GLfloat height,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);		
 
-	void render();											//渲染函数
+	virtual void render();											//渲染函数
 
 };
 ```
@@ -94,13 +94,14 @@ private:
 public:
 	Cylinder(GLfloat radius = 1, GLfloat height = 1,GLint slice = 50,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);	
-	void render();
+	virtual void render();
 };
 ```
 
-### 子类：棱柱
+### 子类：棱柱与棱台
 ```
 // 仅支持凸多边形的棱柱棱台
+
 // 底面各顶点坐标，传入时须平行于xOz平面!!!!!!!!!!!!!!!!!!!!!!!!
 class Prism :public Geometry{
 private:
@@ -115,13 +116,14 @@ private:
 	void drawPrism();								//绘制单位棱柱
 public:
 	// 必传参数:传入二维点阵数组,顶点个数
+	// 若为棱台，则需要再传入顶面二维点阵数组
 	// 若不传入顶面多边形，则默认与底面相同
 	Prism(GLfloat btmVertexArr[][2], int vertNum, GLfloat height = 1,GLfloat topVertexArr[][2] = NULL,
 		GLfloat angleX = 0, GLfloat angleZ = 0, GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);
 
 	void setScale(GLfloat scaleX, GLfloat scaleY, GLfloat scaleZ);
 
-	void render();
+	virtual void render();
 };
 ```
 
