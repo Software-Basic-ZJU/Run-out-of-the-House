@@ -1,16 +1,17 @@
+#pragma once
 #include "Geometry.h"
 
 class Cubic:public Geometry{
 private:
-	static GLfloat cubic[8][3];					//µ¥Î»Á¢·½Ìå×ø±êµã
-	static GLint cubicIndex[6][4];				//¸÷Ãæ¶¥µã×ø±êË÷Òı
-	GLfloat length, width, height;				//³¤¿í¸ß
+	static GLfloat cubic[8][3];					//å•ä½ç«‹æ–¹ä½“åæ ‡ç‚¹
+	static GLint cubicIndex[6][4];				//å„é¢é¡¶ç‚¹åæ ‡ç´¢å¼•
+	GLfloat length, width, height;				//é•¿å®½é«˜
 
 	void drawCubic();
 public:
 	Cubic(GLfloat length, GLfloat width, GLfloat height,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);		
 
-	virtual void render();											//äÖÈ¾º¯Êı
+	virtual void render();											//æ¸²æŸ“å‡½æ•°
 
 };

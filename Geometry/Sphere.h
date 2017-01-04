@@ -1,21 +1,22 @@
+#pragma once
 #include "Geometry.h"
 
 class Sphere:public Geometry{
 private:
-	void drawSphere();		//»æÖÆµ¥Î»ÇòÌå
-	GLfloat radius;			//°ë¾¶
-	GLint M, N;				//ºá×İÏò·Ö¿éÊı
+	void drawSphere();		//ç»˜åˆ¶å•ä½çƒä½“
+	GLfloat radius;			//åŠå¾„
+	GLint M, N;				//æ¨ªçºµå‘åˆ†å—æ•°
 public:
 
-	// M,N±íÊ¾ÇòµÄºá×İÏò±»ÇĞ·ÖÎª¼¸¿é
+	// M,Nè¡¨ç¤ºçƒçš„æ¨ªçºµå‘è¢«åˆ‡åˆ†ä¸ºå‡ å—
 	Sphere(GLfloat radius = 1, GLint M = 100, GLint N = 100,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);
 
-	void setRadius(GLfloat radius);				//ÉèÖÃ°ë¾¶
+	void setRadius(GLfloat radius);				//è®¾ç½®åŠå¾„
 
-	void setMspice(GLfloat M);					//ÉèÖÃºáÏòÇĞÆ¬Êı
+	void setMspice(GLfloat M);					//è®¾ç½®æ¨ªå‘åˆ‡ç‰‡æ•°
 
-	void setNspice(GLfloat N);					//ÉèÖÃ×İÏòÇĞÆ¬Êı
+	void setNspice(GLfloat N);					//è®¾ç½®çºµå‘åˆ‡ç‰‡æ•°
 
 	virtual void render();
 };

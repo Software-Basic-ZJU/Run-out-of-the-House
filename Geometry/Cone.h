@@ -1,10 +1,11 @@
+#pragma once
 #include "Geometry.h"
 
 class Cone:public Geometry{
 private:
-	GLfloat radius, height;			//°ë¾¶£¬¸ß¶È
-	GLint slice;					//ºáÏò·ÖÆ¬
-	void drawCone();				//»æÖÆµ¥Î»Ô²×¶
+	GLfloat radius, height;			//åŠå¾„ï¼Œé«˜åº¦
+	GLint slice;					//æ¨ªå‘åˆ†ç‰‡
+	void drawCone();				//ç»˜åˆ¶å•ä½åœ†é”¥
 public:
 	Cone(GLfloat radius = 1, GLfloat height = 1, GLint slice = 100,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);

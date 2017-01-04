@@ -1,10 +1,11 @@
+#pragma once
 #include "Geometry.h"
 
 class Cylinder:public Geometry{
 private:
-	GLfloat radius, height;			//µ×ÃæÔ²°ë¾¶¡¢Ô²Öù¸ß
-	GLint slice;					//ºáÏò·ÖÆ¬Êı
-	void drawCylinder();			//»æÖÆµ¥Î»Ô²Öù
+	GLfloat radius, height;			//åº•é¢åœ†åŠå¾„ã€åœ†æŸ±é«˜
+	GLint slice;					//æ¨ªå‘åˆ†ç‰‡æ•°
+	void drawCylinder();			//ç»˜åˆ¶å•ä½åœ†æŸ±
 public:
 	Cylinder(GLfloat radius = 1, GLfloat height = 1,GLint slice = 100,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);	

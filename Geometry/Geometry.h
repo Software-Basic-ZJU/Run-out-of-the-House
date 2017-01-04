@@ -5,29 +5,29 @@
 #define PI 3.141593
 using namespace std;
 
-//¼¸ºÎÌå
+//å‡ ä½•ä½“
 class Geometry{
 public:		
-	bool hidden;							//ÊÇ·ñÒş²Ø
-	GLfloat x, y, z;						//ÈıÎ¬×ø±ê
-	GLfloat angle;							//Ğı×ª½Ç¶È
-	GLfloat rotX = 0, rotY = 0, rotZ = 0;				//Ğı×ªËùÈÆµÄÏòÁ¿
+	bool hidden;							//æ˜¯å¦éšè—
+	GLfloat x, y, z;						//ä¸‰ç»´åæ ‡
+	GLfloat angle;							//æ—‹è½¬è§’åº¦
+	GLfloat rotX = 0, rotY = 0, rotZ = 0;				//æ—‹è½¬æ‰€ç»•çš„å‘é‡
 
-	Geometry(GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);	//¼¸ºÎÌå¹¹Ôì
+	Geometry(GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);	//å‡ ä½•ä½“æ„é€ 
 
-	void setColor(GLfloat red, GLfloat green, GLfloat blue);//ÉèÖÃRGBÑÕÉ«
+	void setColor(GLfloat red, GLfloat green, GLfloat blue);//è®¾ç½®RGBé¢œè‰²
 	
-	void rotateX(GLfloat angle);							//ÈÆxÖá·½Ïò×ÔĞı×ª
-	void rotateY(GLfloat angle);							//ÈÆyÖá·½Ïò×ÔĞı×ª
-	void rotateZ(GLfloat angle);							//ÈÆzÖá·½Ïò×ÔĞı×ª
-	void rotate(GLfloat angle,GLfloat x, GLfloat y, GLfloat z);			//ÈÆ×Ô¶¨ÒåÏòÁ¿Ğı×ª
-	void setPosition(GLfloat x, GLfloat y, GLfloat z);		//ÉèÖÃÎ»ÖÃ
+	void rotateX(GLfloat angle);							//ç»•xè½´æ–¹å‘è‡ªæ—‹è½¬
+	void rotateY(GLfloat angle);							//ç»•yè½´æ–¹å‘è‡ªæ—‹è½¬
+	void rotateZ(GLfloat angle);							//ç»•zè½´æ–¹å‘è‡ªæ—‹è½¬
+	void rotate(GLfloat angle,GLfloat x, GLfloat y, GLfloat z);			//ç»•è‡ªå®šä¹‰å‘é‡æ—‹è½¬
+	void setPosition(GLfloat x, GLfloat y, GLfloat z);		//è®¾ç½®ä½ç½®
 
-	void setTexture();										//ÉèÖÃÎÆÀí
-	void isHide(bool hidden);								//ÊÇ·ñÒş²Ø
+	void setTexture();										//è®¾ç½®çº¹ç†
+	void isHide(bool hidden);								//æ˜¯å¦éšè—
 
 	virtual void render()=0;
 };
 
 
-//×ÓÀàĞèÒªÖØĞÂ¶¨ÒådrawºÍrenderº¯Êı
+//å­ç±»éœ€è¦é‡æ–°å®šä¹‰drawå’Œrenderå‡½æ•°

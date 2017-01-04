@@ -1,12 +1,13 @@
+#pragma once
 #include "..\Geometry\Cubic.h"
-#include <list>
 
+// 地板
 class Floor{
 private:
 	GLfloat length, width;				//地板长、宽
-	list<Geometry *> geoList;			//所用到的几何体列表
+	Geometry *cubic;					//所用的几何体指针
 public:
-	Floor(GLfloat length = 100, GLfloat width = 100);
+	Floor(GLfloat length = 100, GLfloat width = 90);
 
 	void render();
 };

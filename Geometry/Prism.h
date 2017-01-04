@@ -1,22 +1,23 @@
+#pragma once
 #include "Geometry.h"
 
-// ½öÖ§³ÖÍ¹¶à±ßĞÎµÄÀâÖùÀâÌ¨
+// ä»…æ”¯æŒå‡¸å¤šè¾¹å½¢çš„æ£±æŸ±æ£±å°
 
-// µ×Ãæ¸÷¶¥µã×ø±ê£¬´«ÈëÊ±ĞëÆ½ĞĞÓÚxOzÆ½Ãæ!!!!!!!!!!!!!!!!!!!!!!!!
+// åº•é¢å„é¡¶ç‚¹åæ ‡ï¼Œä¼ å…¥æ—¶é¡»å¹³è¡ŒäºxOzå¹³é¢!!!!!!!!!!!!!!!!!!!!!!!!
 class Prism :public Geometry{
 private:
 
-	GLfloat **btmVertexArr;							//µ×Ãæ¶à±ßĞÎ¸÷¶¨µã¶şÎ¬Êı×é£¬°´Ë³Ğò´«Èë
-	GLfloat **topVertexArr;							//¶¥²¿¶à±ßĞÎ¸÷¶¨µã¶şÎ¬Êı×é£¬°´Ë³Ğò´«Èë
+	GLfloat **btmVertexArr;							//åº•é¢å¤šè¾¹å½¢å„å®šç‚¹äºŒç»´æ•°ç»„ï¼ŒæŒ‰é¡ºåºä¼ å…¥
+	GLfloat **topVertexArr;							//é¡¶éƒ¨å¤šè¾¹å½¢å„å®šç‚¹äºŒç»´æ•°ç»„ï¼ŒæŒ‰é¡ºåºä¼ å…¥
 
-	int vertNum;									//¶à±ßĞÎ±ßÊı,×î´óÖ§³Ö20±ß
-	GLfloat height;									//³¤,¿í,¸ß
-	GLfloat angleX, angleZ;							//Íù+X·½ÏòÓë+Z·½ÏòµÄÇãĞ±½Ç
-	GLfloat scaleX = 1, scaleY = 1, scaleZ = 1;		//¸÷·½ÏòËõ·Å±ÈÀı
-	void drawPrism();								//»æÖÆµ¥Î»ÀâÖù
+	int vertNum;									//å¤šè¾¹å½¢è¾¹æ•°,æœ€å¤§æ”¯æŒ20è¾¹
+	GLfloat height;									//é•¿,å®½,é«˜
+	GLfloat angleX, angleZ;							//å¾€+Xæ–¹å‘ä¸+Zæ–¹å‘çš„å€¾æ–œè§’
+	GLfloat scaleX = 1, scaleY = 1, scaleZ = 1;		//å„æ–¹å‘ç¼©æ”¾æ¯”ä¾‹
+	void drawPrism();								//ç»˜åˆ¶å•ä½æ£±æŸ±
 public:
-	// ±Ø´«²ÎÊı:´«Èë¶şÎ¬µãÕóÊı×é,¶¥µã¸öÊı
-	// Èô²»´«Èë¶¥Ãæ¶à±ßĞÎ£¬ÔòÄ¬ÈÏÓëµ×ÃæÏàÍ¬
+	// å¿…ä¼ å‚æ•°:ä¼ å…¥äºŒç»´ç‚¹é˜µæ•°ç»„,é¡¶ç‚¹ä¸ªæ•°
+	// è‹¥ä¸ä¼ å…¥é¡¶é¢å¤šè¾¹å½¢ï¼Œåˆ™é»˜è®¤ä¸åº•é¢ç›¸åŒ
 	Prism(GLfloat btmVertexArr[][2], int vertNum, GLfloat height = 1,GLfloat topVertexArr[][2] = NULL,
 		GLfloat angleX = 0, GLfloat angleZ = 0, GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);
 

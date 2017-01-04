@@ -26,8 +26,8 @@ Prism::Prism(GLfloat btmVertexArr[][2],int vertNum,GLfloat height, GLfloat topVe
 
 void Prism::drawPrism(){
 	int vertNum = this->vertNum;
-	GLfloat offsetX = this->height*tan(this->angleX*PI / 180);		//x·½ÏòÆ«ÒÆÁ¿
-	GLfloat offsetZ = this->height*tan(this->angleZ*PI / 180);		//y·½ÏòÆ«ÒÆÁ¿
+	GLfloat offsetX = this->height*tan(this->angleX*PI / 180);		//xæ–¹å‘åç§»é‡
+	GLfloat offsetZ = this->height*tan(this->angleZ*PI / 180);		//yæ–¹å‘åç§»é‡
 	
 	glBegin(GL_POLYGON);
 	glNormal3f(this->btmVertexArr[0][0], 0, this->btmVertexArr[0][1]);
