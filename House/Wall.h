@@ -6,7 +6,7 @@
 class Wall{
 private:
 	GLfloat lenth, width;		//长宽
-	GLfloat height = 20;		//高固定为10
+	GLfloat height = 20;		//高固定为20
 	GLfloat x, y, z;			//坐标
 	Geometry *cubic;				//所用到的几何体指针
 public:

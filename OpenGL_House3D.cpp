@@ -42,9 +42,13 @@ Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
 
 */
 Floor *flo = new Floor();
+Wall *entryWall1 = new Wall(1, 20, -20, 0, 55);
+Wall *entryWall2 = new Wall(1, 20, 0, 0, 55);
+
 Wall *westWall = new Wall(1,90, -49.5, 0, 0);
 Wall *northWall = new Wall(98, 1, 0, 0, -44.5);
 Wall *eastWall = new Wall(1, 90, 49.5, 0, 0);
+Wall *southWall = new Wall(50, 1, 24.5, 0, 44.5);
 
 Wall *roomWall1 = new Wall(29, 1,-34.5,0,44.5);
 Wall *roomWall2 = new Wall(29, 1, -34.5, 0, 15);
@@ -54,6 +58,7 @@ Wall *roomWall4 = new Wall(1, 30, 10, 0, -30);
 WallwithDoor *doorWall1 = new WallwithDoor(1, 30, 10, 15, -20, 0, 30);
 WallwithDoor *doorWall2 = new WallwithDoor(1, 30, 10, 15, -20, 0, 0);
 WallwithDoor *doorWall3 = new WallwithDoor(30.5, 1, 10, 15, -4.5, 0, -15);
+WallwithDoor *entrance = new WallwithDoor(20, 1, 10, 15, -10, 0, 65);
 
 //ÏÔÊ¾ÁÐ±í
 GLint HouseList(){
@@ -75,10 +80,13 @@ GLint HouseList(){
 
 	//prism->render();
 	flo->render();
+	entryWall1->render();
+	entryWall2->render();
 
 	northWall->render();
 	westWall->render();
 	eastWall->render();
+	southWall->render();
 
 	roomWall1->render();
 	roomWall2->render();
@@ -88,6 +96,8 @@ GLint HouseList(){
 	doorWall1->render();
 	doorWall2->render();
 	doorWall3->render();
+
+	entrance->render();
 
 	glEndList();
 	return lid;
@@ -131,7 +141,6 @@ void key(unsigned char k, int x, int y)
 	switch (k)
 	{
 	case 27:
-	case 'q': {exit(0); break; }
 	case 'p': {break; }
 
 	case ' ': {bAnim = !bAnim; break; }
@@ -166,6 +175,14 @@ void key(unsigned char k, int x, int y)
 				  eye[2] += 0.2f;
 				  center[2] += 0.2f;
 				  break;
+	}
+	case 'q':{
+				 fRotate -= 1.0f;
+				 break;
+	}
+	case 'e':{
+				 fRotate += 1.0f;
+				 break;
 	}
 	}
 
