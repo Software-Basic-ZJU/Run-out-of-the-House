@@ -1,7 +1,12 @@
 #include "House\Floor.h"
 #include "Helpers\FPS.h"
-#include "House\Wall.h"
-#include "House\WallwithDoor.h"
+#include "House\Wall\Wall.h"
+#include "House\Wall\WallwithDoor.h"
+#include "House\Bed.h"
+#include "House\Table\Table.h"
+#include "House\Table\RoundTable.h"
+#include "House\Door\RotateDoor.h"
+#include "House\Door\TransDoor.h"
 
 float fTranslate;
 float fRotate;
@@ -55,10 +60,22 @@ Wall *roomWall2 = new Wall(29, 1, -34.5, 0, 15);
 Wall *roomWall3 = new Wall(29, 1, -34.5, 0, -15);
 Wall *roomWall4 = new Wall(1, 30, 10, 0, -30);
 
-WallwithDoor *doorWall1 = new WallwithDoor(1, 30, 10, 15, -20, 0, 30);
-WallwithDoor *doorWall2 = new WallwithDoor(1, 30, 10, 15, -20, 0, 0);
-WallwithDoor *doorWall3 = new WallwithDoor(30.5, 1, 10, 15, -4.5, 0, -15);
+WallwithDoor *doorWall1 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 30, 90);
+WallwithDoor *doorWall2 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 0, 90);
+WallwithDoor *doorWall3 = new WallwithDoor(30.5, 1, 10, 15, -4.75, 0, -15);
 WallwithDoor *entrance = new WallwithDoor(20, 1, 10, 15, -10, 0, 65);
+
+Bed *bed1 = new Bed(15,8,2,-41.5,0,-10.5,180);
+Bed *bed2 = new Bed(15,8,2,-41.5,0,40,180);
+
+Table *table = new Table(8, 8, 5, 0, 0, -35);
+RoundTable *roundTable = new RoundTable(6, 5, 30, 0, -15);
+
+RotateDoor *rotateDoor1 = new RotateDoor(10.5, 15, 1, -20, 0, 30, 90);
+RotateDoor *rotateDoor2 = new RotateDoor(10.5, 15, 1, -20, 0, 0, 90);
+RotateDoor *rotateDoor3 = new RotateDoor(10.5, 15, 1, -4.5, 0, -15);
+
+TransDoor *transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
 
 //显示列表
 GLint HouseList(){
@@ -99,18 +116,24 @@ GLint HouseList(){
 
 	entrance->render();
 
+	bed1->render();
+	bed2->render();
+
+	table->render();
+	roundTable->render();
+
 	glEndList();
 	return lid;
 }
 
-void Draw_Triangle() // This function draws a triangle with RGB colors
+void display() // This function draws a triangle with RGB colors
 {
-	glTranslatef(0, 0, 4 + 1);
-	//glutSolidTeapot(1);
-	glPopMatrix();
+	rotateDoor1->render();
+	rotateDoor2->render();
+	rotateDoor3->render();
 
+	transDoor->render();
 	glCallList(tableList);		//显示列表
-
 }
 
 void reshape(int width, int height)
@@ -147,23 +170,23 @@ void key(unsigned char k, int x, int y)
 	case 'o': {bWire = !bWire; break; }
 
 	case 'a': {
-				  eye[0] -= 0.2f;
-				  center[0] -= 0.2f;
+				  eye[0] -= 1.0f;
+				  center[0] -= 1.0f;
 				  break;
 	}
 	case 'd': {
-				  eye[0] += 0.2f;
-				  center[0] += 0.2f;
+				  eye[0] += 1.0f;
+				  center[0] += 1.0f;
 				  break;
 	}
 	case 'w': {
-				  eye[1] -= 0.2f;
-				  center[1] -= 0.2f;
+				  eye[1] -= 1.0f;
+				  //center[1] -= 0.2f;
 				  break;
 	}
 	case 's': {
-				  eye[1] += 0.2f;
-				  center[1] += 0.2f;
+				  eye[1] += 1.0f;
+				 // center[1] += 0.2f;
 				  break;
 	}
 	case 'z': {
@@ -182,6 +205,24 @@ void key(unsigned char k, int x, int y)
 	}
 	case 'e':{
 				 fRotate += 1.0f;
+				 break;
+	}
+	case 'r':{
+				 if (rotateDoor1->getStatus()){
+					 rotateDoor1->closeDoor();
+				 }
+				 else{
+					 rotateDoor1->openDoor();
+				 }
+				 break;
+	}
+	case 't':{
+				 if (transDoor->getStatus()){
+					 transDoor->closeDoor();
+				 }
+				 else{
+					 transDoor->openDoor();
+				 }
 				 break;
 	}
 	}
@@ -219,7 +260,7 @@ void redraw()
 	//	glTranslatef(0.0f, 0.0f,-6.0f);			// Place the triangle at Center
 	glRotatef(fRotate, 0, 1.0f, 0);			// Rotate around Y axis
 	glScalef(0.2, 0.2, 0.2);
-	Draw_Triangle();						// Draw triangle
+	display();						// Draw triangle
 
 	if (bAnim) fRotate += 0.05f;
 

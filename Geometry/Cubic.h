@@ -12,6 +12,8 @@ public:
 	Cubic(GLfloat length, GLfloat width, GLfloat height,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);		
 
+	void resize(GLfloat length, GLfloat width, GLfloat height);		//重设尺寸
+
 	virtual void render();											//渲染函数
 
 };

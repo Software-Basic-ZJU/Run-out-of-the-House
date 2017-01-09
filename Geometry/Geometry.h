@@ -7,12 +7,12 @@ using namespace std;
 
 //几何体
 class Geometry{
-public:		
+protected:		
 	bool hidden;							//是否隐藏
 	GLfloat x, y, z;						//三维坐标
 	GLfloat angle;							//旋转角度
 	GLfloat rotX = 0, rotY = 0, rotZ = 0;				//旋转所绕的向量
-
+public:
 	Geometry(GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);	//几何体构造
 
 	void setColor(GLfloat red, GLfloat green, GLfloat blue);//设置RGB颜色

@@ -1,6 +1,6 @@
 #pragma once
 #pragma execution_character_set("utf-8")
-#include "..\Geometry\Cubic.h"
+#include "..\..\Geometry\Cubic.h"
 
 //墙面（不带门)
 class Wall{

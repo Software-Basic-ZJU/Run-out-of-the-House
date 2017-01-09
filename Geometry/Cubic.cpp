@@ -46,6 +46,13 @@ void Cubic::drawCubic(){
 
 }
 
+void Cubic::resize(GLfloat length, GLfloat width, GLfloat height){
+	this->length = length;
+	this->width = width;
+	this->height = height;
+}
+
+
 void Cubic::render(){
 	if (this->hidden) return;
 	glPushMatrix();

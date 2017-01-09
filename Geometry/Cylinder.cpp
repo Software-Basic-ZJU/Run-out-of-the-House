@@ -15,25 +15,25 @@ void Cylinder::drawCylinder(){
 		//draw top circle
 		glNormal3f(0, 0.5, 0);
 		glVertex3f(0, 0.5, 0);
-		glVertex3f(this->radius*cos(step*delta), 0.5, this->radius*sin(step*delta));
-		glVertex3f(this->radius*cos((step + 1)*delta), 0.5, this->radius*sin((step + 1)*delta));
+		glVertex3f(1*cos(step*delta), 0.5, 1*sin(step*delta));
+		glVertex3f(1*cos((step + 1)*delta), 0.5, 1*sin((step + 1)*delta));
 		glEnd();
 
 		glBegin(GL_TRIANGLES);
 		//draw bottom circle
 		glNormal3f(0, -0.5, 0);
 		glVertex3f(0, -0.5, 0);
-		glVertex3f(this->radius*cos(step*delta), -0.5, this->radius*sin(step*delta));
-		glVertex3f(this->radius*cos((step + 1)*delta), -0.5, this->radius*sin((step + 1)*delta));
+		glVertex3f(1*cos(step*delta), -0.5, 1*sin(step*delta));
+		glVertex3f(1*cos((step + 1)*delta), -0.5, 1*sin((step + 1)*delta));
 		glEnd();
 
 		//draw cylinder
 		glBegin(GL_QUADS);
-		glNormal3f(this->radius*cos(step*delta), 0.5, this->radius*sin(step*delta));
-		glVertex3f(this->radius*cos(step*delta), 0.5, this->radius*sin(step*delta));
-		glVertex3f(this->radius*cos((step + 1)*delta), 0.5, this->radius*sin((step + 1)*delta));
-		glVertex3f(this->radius*cos((step + 1)*delta), -0.5, this->radius*sin((step + 1)*delta));
-		glVertex3f(this->radius*cos(step*delta), -0.5, this->radius*sin(step*delta));
+		glNormal3f(1*cos(step*delta), 0.5, 1*sin(step*delta));
+		glVertex3f(1*cos(step*delta), 0.5, 1*sin(step*delta));
+		glVertex3f(1*cos((step + 1)*delta), 0.5, 1*sin((step + 1)*delta));
+		glVertex3f(1*cos((step + 1)*delta), -0.5, 1*sin((step + 1)*delta));
+		glVertex3f(1*cos(step*delta), -0.5, 1*sin(step*delta));
 
 		glEnd();
 	}

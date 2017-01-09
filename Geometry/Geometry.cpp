@@ -9,21 +9,22 @@ Geometry::Geometry(GLfloat x, GLfloat y,GLfloat z){
 }
 
 void Geometry::rotateX(GLfloat angle){
-	this->angle = angle * PI / 180;
+	this->angle = angle;
 	this->rotX = 1;
 	this->rotY = 0;
 	this->rotZ = 0;
 }
 
 void Geometry::rotateY(GLfloat angle){
-	this->angle = angle * PI / 180;
+	printf("Y angle:%f", angle);
+	this->angle = angle;
 	this->rotX = 0;
 	this->rotY = 1;
 	this->rotZ = 0;
 }
 
 void Geometry::rotateZ(GLfloat angle){
-	this->angle = angle * PI / 180;
+	this->angle = angle;
 	this->rotX = 0;
 	this->rotY = 0;
 	this->rotZ = 1;
