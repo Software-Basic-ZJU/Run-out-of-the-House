@@ -223,13 +223,21 @@ void key(unsigned char k, int x, int y)
 	}
 	//ÓëÇ½±ÚµÄÅö×²¼ì²â  
 	//point p1(-30, -30), p2(30, 30);
-	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, true, true, true, true)) {
+	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, rotateDoor1->getStatus(), rotateDoor2->getStatus(), rotateDoor3->getStatus(), transDoor->getStatus())) {
 		center[0] = center_next[0];
 		center[1] = center_next[1];
 		center[2] = center_next[2];
 		eye[0] = eye_next[0];
 		eye[1] = eye_next[1];
 		eye[2] = eye_next[2];
+	}
+	else {
+		center_next[0] = center[0];
+		center_next[1] = center[1];
+		center_next[2] = center[2];
+		eye_next[0] = eye[0];
+		eye_next[1] = eye[1];
+		eye_next[2] = eye[2];
 	}
 	printf("%f  %f\n", 5.0*eye[0], -5 * eye[2] + 5.0);
 }
