@@ -1,11 +1,24 @@
 #include "Geometry.h"
 
+GLint Geometry::textCoor[4][2] = {
+	{ 1, 1 },
+	{ 1, 0 },
+	{ 0, 0 },
+	{ 0, 1 }
+};
+
 Geometry::Geometry(GLfloat x, GLfloat y,GLfloat z){
 	this->x = x;
 	this->y = y;
 	this->z = z;
 	this->angle = 0;
 	this->hidden = false;
+	this->texture = NULL;
+
+}
+
+void Geometry::setTexture(GLTexture *texture){
+	this->texture = texture;
 }
 
 void Geometry::rotateX(GLfloat angle){

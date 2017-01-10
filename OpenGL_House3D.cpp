@@ -1,3 +1,4 @@
+#include "Geometry\Sphere.h";
 #include "House\Floor.h"
 #include "Helpers\FPS.h"
 #include "House\Wall\Wall.h"
@@ -7,6 +8,8 @@
 #include "House\Table\RoundTable.h"
 #include "House\Door\RotateDoor.h"
 #include "House\Door\TransDoor.h"
+
+#include "Model\ImportObj.h"
 
 float fTranslate;
 float fRotate;
@@ -23,13 +26,13 @@ float center[] = { 0, 0, 0 };
 
 GLint tableList = 0;
 
-/*
+
 //test
 
-Cubic *cubic = new Cubic(1, 1, 3);
+//Cubic *cubic = new Cubic(1, 1, 3);
 Sphere *sphere = new Sphere(1,100,100);
-Cylinder *cylinder = new Cylinder(2,8);
-Cone *cone = new Cone(1.5, 5, 100, 2, 2, 2);
+//Cylinder *cylinder = new Cylinder(2,8,200);
+//Cone *cone = new Cone(1.5, 5, 100, 2, 2, 2);
 
 
 // 棱柱(棱台)测试
@@ -43,9 +46,9 @@ GLfloat testTop[][2] = {
 	{3,-3},
 	{0,0}
 };
-Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
+//Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
 
-*/
+
 Floor *flo = new Floor();
 Wall *entryWall1 = new Wall(1, 20, -20, 0, 55);
 Wall *entryWall2 = new Wall(1, 20, 0, 0, 55);
@@ -77,19 +80,24 @@ RotateDoor *rotateDoor3 = new RotateDoor(10.5, 15, 1, -4.5, 0, -15);
 
 TransDoor *transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
 
+GLTexture *io_texture;
+GLTexture *wall_texture;
+
+ImportObj*io;
+
 //显示列表
 GLint HouseList(){
-	GLfloat coeff[] = { 0.2, 0, 0.2, 1.0 };
+	GLfloat coeff[] = { 1.0, 0.8, 0.5, 1.0 };
 	GLfloat white[] = { 0, 0.5, 0.5, 1 };
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, coeff);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, coeff);
 	GLint lid = glGenLists(1);
 	glNewList(lid, GL_COMPILE);
 
 	//cubic->setPosition(0, 0, -4);
 	//cubic->render();
 	
-	//sphere->setPosition(-1, -1, 0);
-	//sphere->render();
+	sphere->setPosition(0, 2, 0);
+	sphere->render();
 
 	//cylinder->render();
 
@@ -121,6 +129,8 @@ GLint HouseList(){
 
 	table->render();
 	roundTable->render();
+
+	//io->draw();
 
 	glEndList();
 	return lid;
@@ -274,6 +284,30 @@ int main(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 	glutInitWindowSize(960, 600);
 	int windowHandle = glutCreateWindow("Simple GLUT App");
+
+	io_texture = new GLTexture;
+	io_texture->Load("Data/Crack.bmp");
+
+	wall_texture = new GLTexture;
+	wall_texture->Load("Data/black_white.bmp");
+
+	io = new ImportObj("Data/035.obj");
+	io->setTexture(io_texture);
+	io->setTranslatef(2, 3, 3);
+	io->setScalef(1, 1, 1);
+
+	flo->setMainTexture(io_texture);
+
+	rotateDoor1->setTexture(wall_texture);
+	rotateDoor2->setTexture(wall_texture);
+	rotateDoor3->setTexture(wall_texture);
+
+	westWall->setTexture(io_texture);
+	eastWall->setTexture(io_texture);
+	northWall->setTexture(io_texture);
+	southWall->setTexture(io_texture);
+
+	sphere->setTexture(io_texture);
 
 	tableList = HouseList();			//房间显示列表
 

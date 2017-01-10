@@ -9,6 +9,14 @@ Floor::Floor(GLfloat length, GLfloat width){
 	this->entrance = new Cubic(21, 20, 1, -10, -0.5, 55);
 }
 
+void Floor::setMainTexture(GLTexture *texture){
+	this->mainFloor->setTexture(texture);
+}
+
+void Floor::setEntryTexture(GLTexture *texture){
+	this->entrance->setTexture(texture);
+}
+
 void Floor::render(){
 	this->mainFloor->render();
 	this->entrance->render();

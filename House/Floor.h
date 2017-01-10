@@ -9,5 +9,8 @@ private:
 public:
 	Floor(GLfloat length = 100, GLfloat width = 90);
 
+	void setMainTexture(GLTexture *texture);		//室内地板纹理
+	void setEntryTexture(GLTexture *texture);		//玄关地板纹理
+
 	void render();
 };

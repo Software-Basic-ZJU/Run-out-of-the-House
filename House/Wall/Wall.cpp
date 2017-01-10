@@ -21,6 +21,10 @@ void Wall::setPosition(GLfloat x, GLfloat y, GLfloat z){
 	this->cubic->setPosition(x, y, z);
 }
 
+void Wall::setTexture(GLTexture *texture){
+	this->cubic->setTexture(texture);
+}
+
 void Wall::render(){
 	this->cubic->render();
 }

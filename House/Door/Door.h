@@ -9,7 +9,8 @@ protected:
 	GLfloat speed;								//旋转速度
 	Cubic *door;								//门的几何体
 	GLfloat fRotate = 0;						//开关门旋转角度
-	GLfloat angle;							//门自身绕Y轴的自转角度
+	GLfloat angle;								//门自身绕Y轴的自转角度
+	GLTexture *texture;							//纹理
 	bool direction;								//true: 逆时针; false: 顺时针
 	bool run;									//是否在运动
 public:
@@ -19,6 +20,8 @@ public:
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	void rotateY(GLfloat angle);
+
+	void setTexture(GLTexture *texture);			//设置纹理
 
 	virtual void render();
 };

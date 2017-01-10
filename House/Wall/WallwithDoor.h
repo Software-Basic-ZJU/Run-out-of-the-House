@@ -18,6 +18,8 @@ public:
 
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 
+	void setTexture(GLTexture *texture);			//…Ë÷√Œ∆¿Ì
+
 	void rotateY(GLfloat angle);
 
 	void render();

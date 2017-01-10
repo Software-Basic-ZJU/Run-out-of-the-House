@@ -11,7 +11,7 @@ Door::Door(GLfloat width, GLfloat height, GLfloat thickness,
 	this->y = y;
 	this->z = z;
 	this->angle = angle;
-
+	this->texture = NULL;
 	this->door = new Cubic(width, thickness, height, 0, height / 2, 0);
 }
 
@@ -23,6 +23,11 @@ void Door::setPosition(GLfloat x, GLfloat y, GLfloat z){
 
 void Door::rotateY(GLfloat angle){
 	this->angle = angle;
+}
+
+void Door::setTexture(GLTexture *texture){
+	this->texture = texture;
+	this->door->setTexture(texture);
 }
 
 void Door::render(){

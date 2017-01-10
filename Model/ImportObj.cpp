@@ -83,7 +83,7 @@ void ImportObj::draw(void)
 {
 	int findex;
 
-	if(texture) 	texture->Use();
+	if(texture) 	texture->mount();
 	glPushMatrix();
 	glScalef(this->scalef[0], this->scalef[1], this->scalef[2]);
 	glTranslatef(this->translatef[0], this->translatef[1], this->translatef[2]);
@@ -110,7 +110,7 @@ void ImportObj::draw(void)
 
 
 	glPopMatrix();
-	if(texture) glDisable(GL_TEXTURE_2D);		//important
+	if(texture) texture->unmount();		//important
 }
 
 void ImportObj::calculateNormal(float *out, float *a, float *b, float *c)
@@ -174,10 +174,10 @@ void ImportObj::calculateNormals(void)
 	}
 }
 
-void ImportObj::setScalef(GLfloat x){
-    for(int i=0;i<3;i++){
-        this->scalef[i]=x;
-    }
+void ImportObj::setScalef(GLfloat x,GLfloat y,GLfloat z){
+	this->scalef[0] = x;
+	this->scalef[1] = y;
+	this->scalef[2] = z;
 }
 
 void ImportObj::setTranslatef(GLfloat x, GLfloat y, GLfloat z){

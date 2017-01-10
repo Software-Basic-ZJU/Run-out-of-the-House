@@ -27,6 +27,12 @@ void WallwithDoor::setPosition(GLfloat x, GLfloat y, GLfloat z){
 	this->z = z;
 }
 
+void WallwithDoor::setTexture(GLTexture *texture){
+	this->ltCubic->setTexture(texture);
+	this->rtCubic->setTexture(texture);
+	this->topCubic->setTexture(texture);
+}
+
 void WallwithDoor::rotateY(GLfloat angle){
 	this->angle = angle;
 }

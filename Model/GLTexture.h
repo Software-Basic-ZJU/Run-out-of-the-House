@@ -28,11 +28,12 @@ private:
 	int width;										// Texture's width
 	int height;										// Texture's height
 public:
-	void Use();										// Binds the texture for use
+	GLTexture();									// Constructor
+	void mount();									// Binds the texture for use
+	void unmount();									// unmount the texture being used
 	void BuildColorTexture(unsigned char r, unsigned char g, unsigned char b);	// Sometimes we want a texture of uniform color
 	void LoadBMP(char *name);						// Loads a bitmap file
 	void Load(char *name);							// Load the texture
-	GLTexture();									// Constructor
 	virtual ~GLTexture();							// Destructor
 };
 

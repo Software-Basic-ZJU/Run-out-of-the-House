@@ -32,30 +32,45 @@ void GLTexture::Load(char *name)
 	texturename = strlwr(strdup(name));
 
 	// strip "'s
-	while (strstr(texturename, "\""))
-		texturename = strtok(texturename, "\"");
+	while (strstr(name, "\""))
+		texturename = strtok(name, "\"");
 
 	// check the file extension to see what type of texture
-	if(strstr(texturename, ".bmp"))	
-		LoadBMP(texturename);
+	if (strstr(name, ".bmp"))
+		LoadBMP(name);
 }
 
-void GLTexture::Use()
+void GLTexture::mount()
 {
 	glEnable(GL_TEXTURE_2D);								// Enable texture mapping
 	glBindTexture(GL_TEXTURE_2D, texture[0]);				// Bind the texture as the current one
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+}
+
+void GLTexture::unmount(){
+	glDisable(GL_TEXTURE_2D);
 }
 
 void GLTexture::LoadBMP(char *name)
 {
-	// Create a place to store the texture
-	AUX_RGBImageRec *TextureImage[1];
+	//printf("%s\n", name);
+	// Create a place to store the texture1
+	AUX_RGBImageRec *TextureImage[1];	
 
 	// Set the pointer to NULL
 	memset(TextureImage,0,sizeof(void *)*1);
-
+	
+	FILE *fp;
+	fp = fopen(name, "rb");
+	if (fp == NULL){
+		printf("Cannot open bitmap!\n");
+		return;
+	}
+	fclose(fp);
+	wchar_t filename[100];
+	swprintf(filename, 100, L"%hs", name);
 	// Load the bitmap and assign our pointer to it
-	TextureImage[0] = auxDIBImageLoad(name);
+	TextureImage[0] = auxDIBImageLoad(filename);
 
 	// Just in case we want to use the width and height later
 	width = TextureImage[0]->sizeX;
@@ -69,10 +84,16 @@ void GLTexture::LoadBMP(char *name)
 
 	// Use mipmapping filter
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// Generate the mipmaps
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, TextureImage[0]->sizeX, TextureImage[0]->sizeY, GL_RGB, GL_UNSIGNED_BYTE, TextureImage[0]->data);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 
+		3, 
+		TextureImage[0]->sizeX, 
+		TextureImage[0]->sizeY, 
+		GL_RGB, GL_UNSIGNED_BYTE, 
+		TextureImage[0]->data);
 
 	// Cleanup
 	if (TextureImage[0])

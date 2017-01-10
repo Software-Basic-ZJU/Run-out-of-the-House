@@ -31,6 +31,13 @@ void Table::setPosition(GLfloat x, GLfloat y, GLfloat z){
 	this->z = z;
 }
 
+void Table::setTexture(GLTexture *texture){
+	for (list<Geometry *>::iterator geo = geoList.begin();
+		geo != geoList.end(); geo++){
+		(*geo)->setTexture(texture);
+	}
+}
+
 void Table::rotateY(GLfloat angle){
 	this->angle = angle;
 }
