@@ -1,4 +1,4 @@
-#include "Geometry\Sphere.h";
+#include "Geometry\Sphere.h"
 #include "House\Floor.h"
 #include "Helpers\FPS.h"
 #include "House\Wall\Wall.h"
@@ -11,6 +11,7 @@
 
 #include "Model\ImportObj.h"
 
+#include "Bump\Person.h"
 float fTranslate;
 float fRotate;
 float fScale = 1.0f;	// set inital scale value to 1.0f
@@ -21,8 +22,8 @@ bool bWire = false;
 int wHeight = 0;
 int wWidth = 0;
 
-float eye[] = { 0, 5, 20 };
-float center[] = { 0, 0, 0 };
+//float eye[] = { 0, 5, 20 };
+//float center[] = { 0, 0, 0 };
 
 GLint tableList = 0;
 
@@ -169,75 +170,68 @@ void idle()
 	glutPostRedisplay();
 }
 
+float center[3] = { -2.0f, 1.2f, 9.8f };
+float eye[3] = { -2.0f, 1.2f, 13.8f };
+float center_next[3] = { -2.0f, 1.2f, 9.8f };
+float eye_next[3] = { -2.0f, 1.2f, 13.8f };
+GLfloat light_spo_pos[4] = { 0,6,0,1 };
+GLfloat light_spo_dir[4] = { 0,-1,0,1 };
+GLfloat light_spo_angle = 5;
+
 void key(unsigned char k, int x, int y)
 {
+
 	switch (k)
 	{
 	case 27:
-	case 'p': {break; }
+	case 'q': {exit(0); break; } //ÍË³ö  
 
-	case ' ': {bAnim = !bAnim; break; }
-	case 'o': {bWire = !bWire; break; }
-
-	case 'a': {
-				  eye[0] -= 1.0f;
-				  center[0] -= 1.0f;
-				  break;
+	case 'a': { //×óÒÆ  
+		move(eye, center, eye_next, center_next, left_ward);
+		break;
 	}
-	case 'd': {
-				  eye[0] += 1.0f;
-				  center[0] += 1.0f;
-				  break;
+	case 'd': { //ÓÒÒÆ  
+		move(eye, center, eye_next, center_next, right_ward);
+		break;
 	}
-	case 'w': {
-				  eye[1] -= 1.0f;
-				  //center[1] -= 0.2f;
-				  break;
+	case 'w': { //Ç°ÒÆ  
+		move(eye, center, eye_next, center_next, front);
+		break;
 	}
-	case 's': {
-				  eye[1] += 1.0f;
-				 // center[1] += 0.2f;
-				  break;
-	}
-	case 'z': {
-				  eye[2] -= 0.2f;
-				  center[2] -= 0.2f;
-				  break;
-	}
-	case 'c': {
-				  eye[2] += 0.2f;
-				  center[2] += 0.2f;
-				  break;
-	}
-	case 'q':{
-				 fRotate -= 1.0f;
-				 break;
-	}
-	case 'e':{
-				 fRotate += 1.0f;
-				 break;
-	}
-	case 'r':{
-				 if (rotateDoor1->getStatus()){
-					 rotateDoor1->closeDoor();
-				 }
-				 else{
-					 rotateDoor1->openDoor();
-				 }
-				 break;
-	}
-	case 't':{
-				 if (transDoor->getStatus()){
-					 transDoor->closeDoor();
-				 }
-				 else{
-					 transDoor->openDoor();
-				 }
-				 break;
-	}
+	case 's': {  //ºóÒÆ  
+		move(eye, center, eye_next, center_next, back);
+		break;
 	}
 
-	
+	case 'j': {//ÊÓ½Ç×óÒÆ  
+		rotate(eye, center, eye_next, center_next, left_ward);
+		break;
+	}
+	case 'l': {//ÊÓ½ÇÓÒÒÆ  
+		rotate(eye, center, eye_next, center_next, right_ward);
+		break;
+	}
+	case 'i': {//ÊÓ½ÇÉÏÒÆ  
+		center_next[1] += 0.4f;
+		break;
+	}
+	case 'k': {//ÊÓ½ÇÉÏÒÆ  
+		center_next[1] -= 0.4f;
+		break;
+	}
+
+	}
+	//ÓëÇ½±ÚµÄÅö×²¼ì²â  
+	//point p1(-30, -30), p2(30, 30);
+	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, true, true, true, true)) {
+		center[0] = center_next[0];
+		center[1] = center_next[1];
+		center[2] = center_next[2];
+		eye[0] = eye_next[0];
+		eye[1] = eye_next[1];
+		eye[2] = eye_next[2];
+	}
+	printf("%f  %f\n", 5.0*eye[0], -5 * eye[2] + 5.0);
 }
 
 
