@@ -8,16 +8,18 @@
 #include "House\Table\RoundTable.h"
 #include "House\Door\RotateDoor.h"
 #include "House\Door\TransDoor.h"
-
 #include "Model\ImportObj.h"
-
 #include "Bump\Person.h"
+
+int SCREEN_WIDTH = 960, SCREEN_HEIGHT = 600;
+
 float fTranslate;
 float fRotate;
 float fScale = 1.0f;	// set inital scale value to 1.0f
 
 bool bAnim = false;
 bool bWire = false;
+bool bfullscreen = false;     // 全屏标识
 
 int wHeight = 0;
 int wWidth = 0;
@@ -27,7 +29,8 @@ int wWidth = 0;
 
 GLint tableList = 0;
 
-
+GLfloat theta = 0.0f;       //鼠标控制的角度
+GLfloat viewUp = 0.0f;      //向上向下看
 //test
 
 //Cubic *cubic = new Cubic(1, 1, 3);
@@ -81,10 +84,18 @@ RotateDoor *rotateDoor3 = new RotateDoor(10.5, 15, 1, -4.5, 0, -15);
 
 TransDoor *transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
 
-GLTexture *io_texture;
-GLTexture *wall_texture;
+GLTexture* io_texture;
+GLTexture* wall_texture;
+GLTexture* door_text;
+GLTexture* wall_text;
+GLTexture* bed_text;
+GLTexture* keyObj_text;
 
-ImportObj*io;
+ImportObj* io;
+ImportObj* door;
+ImportObj* doorframe;
+ImportObj* bed;
+ImportObj* keyObj;
 
 //显示列表
 GLint HouseList(){
@@ -132,6 +143,8 @@ GLint HouseList(){
 	roundTable->render();
 
 	//io->draw();
+	keyObj->draw();
+	bed->draw();
 
 	glEndList();
 	return lid;
@@ -219,7 +232,23 @@ void key(unsigned char k, int x, int y)
 		center_next[1] -= 0.4f;
 		break;
 	}
-
+	case 'f': case 'F': {
+		if (bfullscreen)
+		{
+			SCREEN_WIDTH = 960;
+			SCREEN_HEIGHT = 600;
+			glutReshapeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
+			glutPositionWindow(100, 100);
+		}
+		else
+		{
+			SCREEN_WIDTH = 1280;
+			SCREEN_HEIGHT = 1024;
+			glutFullScreen();
+		}
+		bfullscreen = !bfullscreen;
+		break;
+	}
 	}
 	//与墙壁的碰撞检测  
 	//point p1(-30, -30), p2(30, 30);
@@ -242,16 +271,43 @@ void key(unsigned char k, int x, int y)
 	printf("%f  %f\n", 5.0*eye[0], -5 * eye[2] + 5.0);
 }
 
+/*碰撞会有一些小bug，先注释起来。
+void SetViewByMouse()
+{
+POINT mousePos;              //鼠标位置
+POINT middlePos;             //屏幕中心位置
+middlePos.x = SCREEN_WIDTH / 2; // SCREEN_WIDHT 为屏幕宽度，全局变量，可改。
+middlePos.y = SCREEN_HEIGHT / 2;
+
+GetCursorPos(&mousePos);      //得到鼠标当前位置
+
+if (mousePos.x == middlePos.x&&mousePos.y == middlePos.y)    //如果鼠标没有动，返回。
+return;
+SetCursorPos(middlePos.x, middlePos.y);                 //如果鼠标动了，则恢复到屏幕中心
+theta += GLfloat(-middlePos.x + mousePos.x) / 500;      //旋转改变量
+viewUp += GLfloat(middlePos.y - mousePos.y) / 500;     //上下改变量
+}
+*/
 
 void redraw()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();									// Reset The Current Modelview Matrix
+	//SetViewByMouse();
+
+	/*
+	if (theta>360) theta = 0.0f; //角度不能大于360
+	if (viewUp> 0.5f)	viewUp = 0.5f;         //限制视角
+	if (viewUp<-0.6f)	viewUp = -0.6f;
+	center[0] = float(eye[0] + cos(theta));
+	center[2] = float(eye[2] + sin(theta));
+	center[1] = eye[1];
+	*/
 
 	gluLookAt(eye[0], eye[1], eye[2],
 		center[0], center[1], center[2],
 		0, 1, 0);				// 场景（0，0，0）的视点中心 (0,0,0)，Y轴向上
+	glutPostRedisplay();
 
 	if (bWire) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -277,26 +333,47 @@ void redraw()
 	if (bAnim) fRotate += 0.05f;
 
 	FPS *fps = new FPS();
+	glLoadIdentity();
+	glFlush();
 	glutSwapBuffers();
+}
+
+void objectInit() {
+	//床,长宽高={21.03,16.15,7.82} 缩小之后
+	bed_text = new GLTexture;
+	bed_text->Load("data/9.bmp");
+
+	bed = new ImportObj("data/bed.obj");
+	bed->setTexture(bed_text);
+	bed->setScalef(0.01, 0.01, 0.01);
+	bed->setTranslatef(41, 0, 33.5);
+	bed->setRotatef(180, 0, 1, 0);
+
+	//钥匙长宽高 937mm 100mm 466mm 未换算
+	keyObj_text = new GLTexture;
+	keyObj_text->Load("data/13.bmp");
+
+	keyObj = new ImportObj("data/key.obj");
+	keyObj->setTexture(keyObj_text);
+	keyObj->setScalef(0.1, 0.1, 0.1);
+	keyObj->setTranslatef(0, 4, 0);
+	keyObj->setRotatef(0, 0, 1, 0);
 }
 
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-	glutInitWindowSize(960, 600);
+	glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	int windowHandle = glutCreateWindow("Simple GLUT App");
 
+	objectInit();
+
 	io_texture = new GLTexture;
-	io_texture->Load("Data/Crack.bmp");
+	io_texture->Load("Data/1.bmp");
 
 	wall_texture = new GLTexture;
-	wall_texture->Load("Data/black_white.bmp");
-
-	io = new ImportObj("Data/door2.obj");
-	io->setTexture(io_texture);
-	io->setTranslatef(2, 3, 3);
-	io->setScalef(1, 1, 1);
+	wall_texture->Load("Data/2.bmp");
 
 	flo->setMainTexture(io_texture);
 

@@ -29,7 +29,7 @@ GLTexture::~GLTexture()
 void GLTexture::Load(char *name)
 {
 	// make the texture name all lower case
-	texturename = strlwr(strdup(name));
+	texturename = _strlwr(_strdup(name));
 
 	// strip "'s
 	while (strstr(name, "\""))

@@ -85,8 +85,8 @@ void ImportObj::draw(void)
 
 	if(texture) 	texture->mount();
 	glPushMatrix();
-	glScalef(this->scalef[0], this->scalef[1], this->scalef[2]);
 	glTranslatef(this->translatef[0], this->translatef[1], this->translatef[2]);
+	glScalef(this->scalef[0], this->scalef[1], this->scalef[2]);
 	glRotatef(this->rotatef[0], this->rotatef[1], this->rotatef[2], this->rotatef[3]);
 	glBegin(GL_QUADS);
 	//glBegin(GL_TRIANGLES);
@@ -107,8 +107,6 @@ void ImportObj::draw(void)
 	}
 	glEnd();
 	glFlush();
-
-
 	glPopMatrix();
 	if(texture) texture->unmount();		//important
 }
