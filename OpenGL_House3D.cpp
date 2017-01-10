@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
 	wall_texture = new GLTexture;
 	wall_texture->Load("Data/black_white.bmp");
 
-	io = new ImportObj("Data/035.obj");
+	io = new ImportObj("Data/door2.obj");
 	io->setTexture(io_texture);
 	io->setTranslatef(2, 3, 3);
 	io->setScalef(1, 1, 1);
