@@ -6,11 +6,12 @@
 // 方桌
 class Table{
 private:
-	GLfloat length, width, height;		//长宽高
-	GLfloat x, y, z;					//坐标
 	GLfloat angle;						//绕Y轴旋转角度
 	list<Geometry *> geoList;			//涉及到的几何体列表
 public:
+	GLfloat length, width, height;		//长宽高
+	GLfloat x, y, z;					//坐标
+
 	Table(GLfloat length, GLfloat width, GLfloat height,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0, GLfloat angle = 0);
 

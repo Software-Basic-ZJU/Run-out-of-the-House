@@ -21,6 +21,7 @@ void Door::setPosition(GLfloat x, GLfloat y, GLfloat z){
 	this->z = z;
 }
 
+
 void Door::rotateY(GLfloat angle){
 	this->angle = angle;
 }
