@@ -17,6 +17,7 @@ public:
 	void setAmbientLight();			//设置环境光
 	void setDiffuseLight();			//设置光源位置以及漫反射颜色
 	void setLimitRange();			//设置位置性光源光照范围
+    void setPosition();
 	void setPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 	void setColor(GLfloat x, GLfloat y, GLfloat z, GLfloat w);

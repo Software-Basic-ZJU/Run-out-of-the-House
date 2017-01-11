@@ -107,8 +107,7 @@ GLint HouseList(){
 	GLfloat coeff[] = { 1.0, 0.8, 0.5, 1.0 };
 	GLfloat white[] = { 0, 0.5, 0.5, 1 };
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, coeff);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, coeff);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, coeff);
+   /* glMaterialfv(GL_FRONT, GL_AMBIENT, coeff);*/
 	GLint lid = glGenLists(1);
 	glNewList(lid, GL_COMPILE);
 
@@ -189,8 +188,8 @@ void idle()
 }
 
 float center[3] = { -2.0f, 1.2f, 9.8f };
-float eye[3] = { -2.0f, 20.0f, 13.8f };		//上帝视角
-//float eye[3] = { -2.0f, 1.2f, 13.8f };	//漫游视角
+//float eye[3] = { -2.0f, 20.0f, 13.8f };		//上帝视角
+float eye[3] = { -2.0f, 1.2f, 13.8f };	//漫游视角
 float center_next[3] = { -2.0f, 1.2f, 9.8f };
 float eye_next[3] = { -2.0f, 1.2f, 13.8f };
 GLfloat light_spo_pos[4] = { 0,6,0,1 };
@@ -368,16 +367,16 @@ void redraw()
     light[1]->setPosition(0, 0, 0, 1);
     light[1]->setColor(1, 0, 0, 1);
     light[1]->setDiffuseLight();
-    light[1]->enable();
+    //light[1]->enable();
 
-    //light[2]是位置性光源（点光源，聚光灯）
+    //light[2]是位置性光源（点光源，聚光灯） 还有一些问题。
     light[2] = new Light(GL_LIGHT2);
-    light[2]->setPosition(0, 0, 0, 1);
-    light[2]->setColor(0, 0, 1, 1);
+	light[2]->setPosition(eye[0], eye[1], eye[2], 1);//根据人的位置设置聚光灯的位置
+    light[2]->setColor(1, 1, 1, 1);
     light[2]->setDiffuseLight();
-    light[2]->setAgglomeration(50);
-    light[2]->setSpotangle(5);
-    light[2]->setLightDir(0, 0, -1);
+    light[2]->setAgglomeration(100);
+    light[2]->setSpotangle(45);
+    light[2]->setLightDir(center[0], 0, center[2]);//根据人的朝向设置聚光灯的朝向
     light[2]->setLimitRange();
     light[2]->enable();
 
@@ -443,7 +442,7 @@ void objectInit() {
 	transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
 
 	chair_text = new GLTexture;
-	chair_text->Load("data/flower.bmp");
+	chair_text->Load("data/1.bmp");
 	chair1 = new ImportObj("data/chair2.obj");
 	chair1->setTexture(chair_text);
 	chair1->setPosition(20, 0, -15);
@@ -454,7 +453,7 @@ void objectInit() {
 
 	//床,长宽高={21.03,16.15,7.82} 缩小之后
 	bed_text = new GLTexture;
-	bed_text->Load("data/test2.jpg");
+	bed_text->Load("data/5.bmp");
 
 	bed1 = new ImportObj("data/bed.obj");
 	bed1->setTexture(bed_text);
@@ -472,16 +471,12 @@ void objectInit() {
 	keyObj->setPosition(0, 4, 0);
 	keyObj->setRotatef(0, 0, 1, 0);
 
-
 	//旋转门
 	doorTexture = new GLTexture;
 	doorTexture->Load("Data/2.bmp");
 	rotateDoor1 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 30, 90);
 	rotateDoor2 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 0, 90);
 	rotateDoor3 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -4.5, 0, -15,0);
-
-
-
 }
 
 int main(int argc, char *argv[])

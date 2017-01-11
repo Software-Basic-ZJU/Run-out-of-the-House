@@ -27,7 +27,6 @@ void Light::setAmbientLight()
 
 void Light::setDiffuseLight()
 {
-	glLightfv(this->lightNum, GL_POSITION, this->position);
 	glLightfv(this->lightNum, GL_DIFFUSE, this->color);
 }
 
@@ -39,6 +38,11 @@ void Light::setLimitRange()
 	glLightf(this->lightNum, GL_SPOT_EXPONENT, this->agglomeration);       //聚集度
 }
 
+void Light::setPosition()
+{
+    glLightfv(this->lightNum, GL_POSITION, this->position);
+}
+
 //W为0是方向性光源(太阳光);W不为零是位置性光源,X/W, Y/W, Z/W表示了光源的位置
 void Light::setPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
@@ -46,6 +50,7 @@ void Light::setPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 	this->position[1] = y;
 	this->position[2] = z;
 	this->position[3] = w;
+    glLightfv(this->lightNum, GL_POSITION, this->position);
 }
 
 void Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
@@ -53,6 +58,7 @@ void Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 	this->position[0] = x;
 	this->position[1] = y;
 	this->position[2] = z;
+    glLightfv(this->lightNum, GL_POSITION, this->position);
 }
 
 //第四个参数W是光照强度
