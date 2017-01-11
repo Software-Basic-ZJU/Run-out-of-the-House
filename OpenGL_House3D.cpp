@@ -9,6 +9,7 @@
 #include "House\Door\RotateDoor.h"
 #include "House\Door\TransDoor.h"
 #include "Model\ImportObj.h"
+#include "Model\Light.h"
 #include "Bump\Person.h"
 
 int SCREEN_WIDTH = 960, SCREEN_HEIGHT = 600;
@@ -99,11 +100,15 @@ ImportObj* chair2;
 ImportObj* keyObj;
 ImportObj* window;
 
+Light* light[3];//OpenGL最多支持8个光源
+
 //显示列表
 GLint HouseList(){
 	GLfloat coeff[] = { 1.0, 0.8, 0.5, 1.0 };
 	GLfloat white[] = { 0, 0.5, 0.5, 1 };
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, coeff);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, coeff);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, coeff);
 	GLint lid = glGenLists(1);
 	glNewList(lid, GL_COMPILE);
 
@@ -349,14 +354,33 @@ void redraw()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
-	GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat light_pos[] = { 5, 5, 5, 1 };
 
-	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, white);
-	glEnable(GL_LIGHT0);
+    //light[0]是方向性光源
+    light[0] = new Light(GL_LIGHT0); 
+    light[0]->setPosition(5, 5, 5);
+    light[0]->setColor(1, 1, 1);
+    light[0]->setAmbientLight();
+    light[0]->setDiffuseLight();
+    //light[0]->enable();
 
-	//	glTranslatef(0.0f, 0.0f,-6.0f);			// Place the triangle at Center
+    //light[1]是位置性光源（点光源），环境光可以考虑使用位置性光源
+    light[1] = new Light(GL_LIGHT1);
+    light[1]->setPosition(0, 0, 0, 1);
+    light[1]->setColor(1, 0, 0, 1);
+    light[1]->setDiffuseLight();
+    light[1]->enable();
+
+    //light[2]是位置性光源（点光源，聚光灯）
+    light[2] = new Light(GL_LIGHT2);
+    light[2]->setPosition(0, 0, 0, 1);
+    light[2]->setColor(0, 0, 1, 1);
+    light[2]->setDiffuseLight();
+    light[2]->setAgglomeration(50);
+    light[2]->setSpotangle(5);
+    light[2]->setLightDir(0, 0, -1);
+    light[2]->setLimitRange();
+    light[2]->enable();
+
 	glRotatef(fRotate, 0, 1.0f, 0);			// Rotate around Y axis
 	glScalef(0.2, 0.2, 0.2);
 	display();						// Draw triangle
