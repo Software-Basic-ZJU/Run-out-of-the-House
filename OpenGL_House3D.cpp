@@ -136,9 +136,6 @@ GLint HouseList(){
 
 	entrance->render();
 
-	//bed1->render();
-	//bed2->render();
-
 	table->render();
 	roundTable->render();
 
