@@ -3,7 +3,7 @@
 
 class ImportObj{
 private:
-	GLTexture* texture;
+	GLTexture* texture;							//纹理
 	GLfloat scalef[3];
 	GLfloat translatef[3];
 	GLfloat rotatef[4];
@@ -16,8 +16,8 @@ public:
 	ImportObj(char* filename);
 	~ImportObj(void);
 	void draw();
-	void setTexture(GLTexture* text);
-	void setScalef(GLfloat x,GLfloat y,GLfloat z);
-	void setTranslatef(GLfloat x, GLfloat y, GLfloat z);
-	void setRotatef(GLfloat angel, GLfloat x, GLfloat y, GLfloat z);
+	void setTexture(GLTexture* text);										//设置纹理
+	void setScalef(GLfloat x,GLfloat y,GLfloat z);							//设置缩放
+	void setPosition(GLfloat x, GLfloat y, GLfloat z);						//设置位置
+	void setRotatef(GLfloat angel, GLfloat x, GLfloat y, GLfloat z);		//设置绕某轴旋转
 };

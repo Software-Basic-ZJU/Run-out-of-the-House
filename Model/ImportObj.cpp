@@ -178,7 +178,7 @@ void ImportObj::setScalef(GLfloat x,GLfloat y,GLfloat z){
 	this->scalef[2] = z;
 }
 
-void ImportObj::setTranslatef(GLfloat x, GLfloat y, GLfloat z){
+void ImportObj::setPosition(GLfloat x, GLfloat y, GLfloat z){
     this->translatef[0]=x;
     this->translatef[1]=y;
     this->translatef[2]=z;

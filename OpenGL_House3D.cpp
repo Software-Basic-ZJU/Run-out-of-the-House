@@ -72,8 +72,8 @@ WallwithDoor *doorWall2 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 0, 90);
 WallwithDoor *doorWall3 = new WallwithDoor(30.5, 1, 10, 15, -4.75, 0, -15);
 WallwithDoor *entrance = new WallwithDoor(20, 1, 10, 15, -10, 0, 65);
 
-Bed *bed1 = new Bed(15,8,2,-41.5,0,-10.5,180);
-Bed *bed2 = new Bed(15,8,2,-41.5,0,40,180);
+//Bed *bed1 = new Bed(15,8,2,-41.5,0,-10.5,180);
+//Bed *bed2 = new Bed(15,8,2,-41.5,0,40,180);
 
 Table *table = new Table(8, 8, 5, 0, 0, -35);
 RoundTable *roundTable = new RoundTable(6, 5, 30, 0, -15);
@@ -136,8 +136,8 @@ GLint HouseList(){
 
 	entrance->render();
 
-	bed1->render();
-	bed2->render();
+	//bed1->render();
+	//bed2->render();
 
 	table->render();
 	roundTable->render();
@@ -184,7 +184,8 @@ void idle()
 }
 
 float center[3] = { -2.0f, 1.2f, 9.8f };
-float eye[3] = { -2.0f, 1.2f, 13.8f };
+float eye[3] = { -2.0f, 20.0f, 13.8f };		//上帝视角
+//float eye[3] = { -2.0f, 1.2f, 13.8f };	//漫游视角
 float center_next[3] = { -2.0f, 1.2f, 9.8f };
 float eye_next[3] = { -2.0f, 1.2f, 13.8f };
 GLfloat light_spo_pos[4] = { 0,6,0,1 };
@@ -197,7 +198,7 @@ void key(unsigned char k, int x, int y)
 	switch (k)
 	{
 	case 27:
-	case 'q': {exit(0); break; } //退出  
+	//case 'q': {exit(0); break; } //退出  
 
 	case 'a': { //左移  
 		move(eye, center, eye_next, center_next, left_ward);
@@ -232,6 +233,27 @@ void key(unsigned char k, int x, int y)
 		center_next[1] -= 0.4f;
 		break;
 	}
+
+		//以下为上帝视角的操作，方便做几何体的定位调试，如果测试漫游请注释掉
+	case 't':{	//飞天
+				 eye[1] += 0.4f;
+				 center[1] += 0.4f;
+				 break;
+	}
+	case 'g':{	//落地
+				 eye[1] -= 0.4f;
+				 center[1] -= 0.4f;
+				 break;
+	}
+	case 'y':{  //抬头看
+				 center[1] += 0.4f;
+				 break;
+	}
+	case 'h':{	//低头看
+				 center[1] -= 0.4f;
+				 break;
+	}
+
 	case 'f': case 'F': {
 		if (bfullscreen)
 		{
@@ -250,22 +272,23 @@ void key(unsigned char k, int x, int y)
 		break;
 	}
 	}
+
 	//与墙壁的碰撞检测  
 	//point p1(-30, -30), p2(30, 30);
 	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, rotateDoor1->getStatus(), rotateDoor2->getStatus(), rotateDoor3->getStatus(), transDoor->getStatus())) {
 		center[0] = center_next[0];
-		center[1] = center_next[1];
+		//center[1] = center_next[1];
 		center[2] = center_next[2];
 		eye[0] = eye_next[0];
-		eye[1] = eye_next[1];
+		//eye[1] = eye_next[1];
 		eye[2] = eye_next[2];
 	}
 	else {
 		center_next[0] = center[0];
-		center_next[1] = center[1];
+		//center_next[1] = center[1];
 		center_next[2] = center[2];
 		eye_next[0] = eye[0];
-		eye_next[1] = eye[1];
+		//eye_next[1] = eye[1];
 		eye_next[2] = eye[2];
 	}
 	printf("%f  %f\n", 5.0*eye[0], -5 * eye[2] + 5.0);
@@ -346,8 +369,8 @@ void objectInit() {
 	bed = new ImportObj("data/bed.obj");
 	bed->setTexture(bed_text);
 	bed->setScalef(0.01, 0.01, 0.01);
-	bed->setTranslatef(41, 0, 33.5);
-	bed->setRotatef(180, 0, 1, 0);
+	bed->setPosition(-41, 0, 26);
+	bed->setRotatef(0, 0, 1, 0);
 
 	//钥匙长宽高 937mm 100mm 466mm 未换算
 	keyObj_text = new GLTexture;
@@ -356,7 +379,7 @@ void objectInit() {
 	keyObj = new ImportObj("data/key.obj");
 	keyObj->setTexture(keyObj_text);
 	keyObj->setScalef(0.1, 0.1, 0.1);
-	keyObj->setTranslatef(0, 4, 0);
+	keyObj->setPosition(0, 4, 0);
 	keyObj->setRotatef(0, 0, 1, 0);
 }
 
@@ -370,21 +393,32 @@ int main(int argc, char *argv[])
 	objectInit();
 
 	io_texture = new GLTexture;
-	io_texture->Load("Data/1.bmp");
+	io_texture->Load("Data/2.bmp");
 
 	wall_texture = new GLTexture;
-	wall_texture->Load("Data/2.bmp");
+	wall_texture->Load("Data/6.bmp");
+
+	door_text = new GLTexture;
+	door_text->Load("Data/2.bmp");
 
 	flo->setMainTexture(io_texture);
+	flo->setEntryTexture(io_texture);
 
-	rotateDoor1->setTexture(wall_texture);
-	rotateDoor2->setTexture(wall_texture);
-	rotateDoor3->setTexture(wall_texture);
+	rotateDoor1->setTexture(door_text);
+	rotateDoor2->setTexture(door_text);
+	rotateDoor3->setTexture(door_text);
 
-	westWall->setTexture(io_texture);
-	eastWall->setTexture(io_texture);
-	northWall->setTexture(io_texture);
-	southWall->setTexture(io_texture);
+	westWall->setTexture(wall_texture);
+	eastWall->setTexture(wall_texture);
+	northWall->setTexture(wall_texture);
+	southWall->setTexture(wall_texture);
+	entryWall1->setTexture(wall_texture);
+	entryWall2->setTexture(wall_texture);
+
+	doorWall1->setTexture(wall_texture);
+	doorWall2->setTexture(wall_texture);
+	doorWall3->setTexture(wall_texture);
+	entrance->setTexture(wall_texture);
 
 	sphere->setTexture(io_texture);
 
