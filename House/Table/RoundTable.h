@@ -7,6 +7,7 @@
 class RoundTable{
 private:
 	GLfloat angle;				//绕Y轴旋转角度
+	GLTexture *texture;			//设置纹理
 	list<Geometry *> geoList;	//涉及到的几何体列表
 public:
 	GLfloat radius;				//圆桌面半径
@@ -15,6 +16,8 @@ public:
 
 	RoundTable(GLfloat radius, GLfloat height,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0, GLfloat angle = 0);
+
+	void setTexuture(GLTexture *texture);
 
 	void rotateY(GLfloat angle);
 

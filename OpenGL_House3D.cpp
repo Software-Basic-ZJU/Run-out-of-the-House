@@ -34,7 +34,7 @@ GLfloat viewUp = 0.0f;      //向上向下看
 //test
 
 //Cubic *cubic = new Cubic(1, 1, 3);
-Sphere *sphere = new Sphere(1,100,100);
+//Sphere *sphere = new Sphere(1,100,100);
 //Cylinder *cylinder = new Cylinder(2,8,200);
 //Cone *cone = new Cone(1.5, 5, 100, 2, 2, 2);
 
@@ -53,36 +53,33 @@ GLfloat testTop[][2] = {
 //Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
 
 
-Floor *flo = new Floor();
-Wall *entryWall1 = new Wall(1, 20, -20, 0, 55);
-Wall *entryWall2 = new Wall(1, 20, 0, 0, 55);
+Floor *flo;
+Wall *entryWall1;
+Wall *entryWall2;
 
-Wall *westWall = new Wall(1,90, -49.5, 0, 0);
-Wall *northWall = new Wall(98, 1, 0, 0, -44.5);
-Wall *eastWall = new Wall(1, 90, 49.5, 0, 0);
-Wall *southWall = new Wall(50, 1, 24.5, 0, 44.5);
+Wall *westWall;
+Wall *northWall;
+Wall *eastWall;
+Wall *southWall;
 
-Wall *roomWall1 = new Wall(29, 1,-34.5,0,44.5);
-Wall *roomWall2 = new Wall(29, 1, -34.5, 0, 15);
-Wall *roomWall3 = new Wall(29, 1, -34.5, 0, -15);
-Wall *roomWall4 = new Wall(1, 30, 10, 0, -30);
+Wall *roomWall1;
+Wall *roomWall2;
+Wall *roomWall3;
+Wall *roomWall4;
 
-WallwithDoor *doorWall1 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 30, 90);
-WallwithDoor *doorWall2 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 0, 90);
-WallwithDoor *doorWall3 = new WallwithDoor(30.5, 1, 10, 15, -4.75, 0, -15);
-WallwithDoor *entrance = new WallwithDoor(20, 1, 10, 15, -10, 0, 65);
+WallwithDoor *doorWall1;
+WallwithDoor *doorWall2;
+WallwithDoor *doorWall3;
+WallwithDoor *entrance;
 
-//Bed *bed1 = new Bed(15,8,2,-41.5,0,-10.5,180);
-//Bed *bed2 = new Bed(15,8,2,-41.5,0,40,180);
+Table *table;
+RoundTable *roundTable;
+TransDoor *transDoor;
 
-Table *table = new Table(8, 8, 5, 0, 0, -35);
-RoundTable *roundTable = new RoundTable(6, 5, 30, 0, -15);
-
-RotateDoor *rotateDoor1 = new RotateDoor(10.5, 15, 1, -20, 0, 30, 90);
-RotateDoor *rotateDoor2 = new RotateDoor(10.5, 15, 1, -20, 0, 0, 90);
-RotateDoor *rotateDoor3 = new RotateDoor(10.5, 15, 1, -4.5, 0, -15);
-
-TransDoor *transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
+GLTexture *doorTexture;
+RotateDoor *rotateDoor1;
+RotateDoor *rotateDoor2;
+RotateDoor *rotateDoor3;
 
 GLTexture* io_texture;
 GLTexture* wall_texture;
@@ -90,12 +87,17 @@ GLTexture* door_text;
 GLTexture* wall_text;
 GLTexture* bed_text;
 GLTexture* keyObj_text;
+GLTexture* chair_text;
 
 ImportObj* io;
 ImportObj* door;
 ImportObj* doorframe;
-ImportObj* bed;
+ImportObj* bed1;
+ImportObj* bed2;
+ImportObj* chair1;
+ImportObj* chair2;
 ImportObj* keyObj;
+ImportObj* window;
 
 //显示列表
 GLint HouseList(){
@@ -108,8 +110,8 @@ GLint HouseList(){
 	//cubic->setPosition(0, 0, -4);
 	//cubic->render();
 	
-	sphere->setPosition(0, 2, 0);
-	sphere->render();
+	//sphere->setPosition(0, 2, 0);
+	//sphere->render();
 
 	//cylinder->render();
 
@@ -141,7 +143,8 @@ GLint HouseList(){
 
 	//io->draw();
 	keyObj->draw();
-	bed->draw();
+	bed1->draw();
+	chair1->draw();
 
 	glEndList();
 	return lid;
@@ -248,6 +251,14 @@ void key(unsigned char k, int x, int y)
 	}
 	case 'h':{	//低头看
 				 center[1] -= 0.4f;
+				 break;
+	}
+	case 'm':{	//开门测试
+				 if (rotateDoor3->getStatus()){
+					 rotateDoor3->closeDoor();
+				 }
+				 else
+					 rotateDoor3->openDoor();
 				 break;
 	}
 
@@ -359,15 +370,73 @@ void redraw()
 }
 
 void objectInit() {
+	io_texture = new GLTexture;
+	io_texture->Load("Data/2.bmp");
+
+	wall_texture = new GLTexture;
+	wall_texture->Load("Data/6.bmp");
+
+	//地板
+	flo = new Floor();
+	flo->setMainTexture(io_texture);
+	flo->setEntryTexture(io_texture);
+
+	entryWall1 = new Wall(1, 20, -20, 0, 55);
+	entryWall2 = new Wall(1, 20, 0, 0, 55);
+	entryWall1->setTexture(wall_texture);
+	entryWall2->setTexture(wall_texture);
+
+	//房子的外围墙
+	westWall = new Wall(1, 90, -49.5, 0, 0);
+	northWall = new Wall(98, 1, 0, 0, -44.5);
+	eastWall = new Wall(1, 90, 49.5, 0, 0);
+	southWall = new Wall(50, 1, 24.5, 0, 44.5);
+	westWall->setTexture(wall_texture);
+	eastWall->setTexture(wall_texture);
+	northWall->setTexture(wall_texture);
+	southWall->setTexture(wall_texture);
+
+	//各个房间的墙
+	roomWall1 = new Wall(29, 1, -34.5, 0, 44.5);
+	roomWall2 = new Wall(29, 1, -34.5, 0, 15);
+	roomWall3 = new Wall(29, 1, -34.5, 0, -15);
+	roomWall4 = new Wall(1, 30, 10, 0, -30);
+
+	//带门的墙
+	doorWall1 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 30, 90);
+	doorWall2 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 0, 90);
+	doorWall3 = new WallwithDoor(30.5, 1, 10, 15, -4.75, 0, -15);
+	entrance = new WallwithDoor(20, 1, 10, 15, -10, 0, 65);
+	doorWall1->setTexture(wall_texture);
+	doorWall2->setTexture(wall_texture);
+	doorWall3->setTexture(wall_texture);
+	entrance->setTexture(wall_texture);
+
+	//各种家具
+
+	table = new Table(8, 8, 5, 0, 0, -35);
+	roundTable = new RoundTable(6, 5, 30, 0, -15);
+	transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
+
+	chair_text = new GLTexture;
+	chair_text->Load("data/flower.bmp");
+	chair1 = new ImportObj("data/chair2.obj");
+	chair1->setTexture(chair_text);
+	chair1->setPosition(20, 0, -15);
+	chair1->setScalef(0.01, 0.01, 0.01);
+	chair1->setRotatef(90, 0, 1, 0);
+
+	roundTable->setTexuture(chair_text);
+
 	//床,长宽高={21.03,16.15,7.82} 缩小之后
 	bed_text = new GLTexture;
-	bed_text->Load("data/9.bmp");
+	bed_text->Load("data/test2.jpg");
 
-	bed = new ImportObj("data/bed.obj");
-	bed->setTexture(bed_text);
-	bed->setScalef(0.01, 0.01, 0.01);
-	bed->setPosition(-41, 0, 26);
-	bed->setRotatef(0, 0, 1, 0);
+	bed1 = new ImportObj("data/bed.obj");
+	bed1->setTexture(bed_text);
+	bed1->setScalef(0.01, 0.01, 0.01);
+	bed1->setPosition(-41, 0, 26);
+	bed1->setRotatef(0, 0, 1, 0);
 
 	//钥匙长宽高 937mm 100mm 466mm 未换算
 	keyObj_text = new GLTexture;
@@ -378,6 +447,17 @@ void objectInit() {
 	keyObj->setScalef(0.1, 0.1, 0.1);
 	keyObj->setPosition(0, 4, 0);
 	keyObj->setRotatef(0, 0, 1, 0);
+
+
+	//旋转门
+	doorTexture = new GLTexture;
+	doorTexture->Load("Data/2.bmp");
+	rotateDoor1 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 30, 90);
+	rotateDoor2 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 0, 90);
+	rotateDoor3 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -4.5, 0, -15,0);
+
+
+
 }
 
 int main(int argc, char *argv[])
@@ -388,36 +468,6 @@ int main(int argc, char *argv[])
 	int windowHandle = glutCreateWindow("Simple GLUT App");
 
 	objectInit();
-
-	io_texture = new GLTexture;
-	io_texture->Load("Data/2.bmp");
-
-	wall_texture = new GLTexture;
-	wall_texture->Load("Data/6.bmp");
-
-	door_text = new GLTexture;
-	door_text->Load("Data/2.bmp");
-
-	flo->setMainTexture(io_texture);
-	flo->setEntryTexture(io_texture);
-
-	rotateDoor1->setTexture(door_text);
-	rotateDoor2->setTexture(door_text);
-	rotateDoor3->setTexture(door_text);
-
-	westWall->setTexture(wall_texture);
-	eastWall->setTexture(wall_texture);
-	northWall->setTexture(wall_texture);
-	southWall->setTexture(wall_texture);
-	entryWall1->setTexture(wall_texture);
-	entryWall2->setTexture(wall_texture);
-
-	doorWall1->setTexture(wall_texture);
-	doorWall2->setTexture(wall_texture);
-	doorWall3->setTexture(wall_texture);
-	entrance->setTexture(wall_texture);
-
-	sphere->setTexture(io_texture);
 
 	tableList = HouseList();			//房间显示列表
 

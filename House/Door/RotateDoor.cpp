@@ -2,12 +2,18 @@
 #pragma execution_character_set("utf-8")
 #include "RotateDoor.h"
 
-RotateDoor::RotateDoor(GLfloat width, GLfloat height, GLfloat thickness,
+RotateDoor::RotateDoor(char *filename,GLTexture *texture,GLfloat width, GLfloat height, GLfloat thickness,
 	GLfloat x, GLfloat y, GLfloat z, GLfloat angle,
 	GLfloat speed, bool direction, bool status) :Door(width, height, thickness, x, y, z, angle){
 	this->speed = speed;
 	this->direction = direction;
 	this->status = status;
+	this->texture = texture;
+	this->door = new ImportObj(filename);
+	this->door->setTexture(texture);
+	this->door->setPosition(0, 0, 0);
+	this->door->setScalef(0.001*width, 0.001*height, 0.001*thickness);
+	this->door->setRotatef(0, 0, 1, 0);
 	if (status) this->fRotate = 90;
 	else this->fRotate = 0;
 }
@@ -35,9 +41,9 @@ void RotateDoor::render(){
 	glPushMatrix();
 	glTranslatef(this->x, this->y + 0.5, this->z);
 	glRotatef(this->angle, 0, 1, 0);
-	glTranslatef(0.5*this->width*(-dir), 0, 0);
+	glTranslatef(0.4*this->width*(-dir), 0, 0);
 	glRotatef(this->fRotate*dir, 0, 1, 0);
-	glTranslatef(0.5*this->width*dir, -0.55, 0);
-	this->door->render();
+	glTranslatef(0.4*this->width*dir, -0.55, 0);
+	this->door->draw();
 	glPopMatrix();
 }

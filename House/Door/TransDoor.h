@@ -12,7 +12,7 @@ private:
 public:
 	TransDoor(GLfloat width, GLfloat height, GLfloat thickness,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0, GLfloat angle = 0,
-		GLfloat speed = 0.001, bool direction = false, bool status = false);
+		GLfloat speed = 0.01, bool direction = false, bool status = false);
 
 	bool getStatus();			//获取门的开闭状态
 

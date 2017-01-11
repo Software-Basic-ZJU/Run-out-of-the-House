@@ -86,8 +86,9 @@ void ImportObj::draw(void)
 	if(texture) 	texture->mount();
 	glPushMatrix();
 	glTranslatef(this->translatef[0], this->translatef[1], this->translatef[2]);
-	glScalef(this->scalef[0], this->scalef[1], this->scalef[2]);
 	glRotatef(this->rotatef[0], this->rotatef[1], this->rotatef[2], this->rotatef[3]);
+	glScalef(this->scalef[0], this->scalef[1], this->scalef[2]);
+
 	glBegin(GL_QUADS);
 	//glBegin(GL_TRIANGLES);
 	//GLfloat temp=1.0/face_count;
