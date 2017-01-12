@@ -3,7 +3,8 @@
 #include "Helpers\alert.h"
 
 int SCREEN_WIDTH = 960, SCREEN_HEIGHT = 600;
-int ALERT = 0;	//0：无显示信息	1：截屏成功	2：获得钥匙
+int ALERT = 0;	//0：无显示信息	1：截屏成功	2：获得钥匙 3:成功逃脱
+bool getKey = false;		//是否拿到钥匙
 
 float fTranslate;
 float fRotate;
@@ -58,6 +59,7 @@ GLTexture *doorTexture;
 RotateDoor *rotateDoor1;
 RotateDoor *rotateDoor2;
 RotateDoor *rotateDoor3;
+RotateDoor *rotateDoor4;
 
 GLTexture* io_texture;
 GLTexture* wall_texture;
@@ -127,13 +129,17 @@ GLint HouseList(){
 	roundTable->render();
 
 	//io->draw();
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 	bed1->draw();
 	bed2->draw();
 	chair1->draw();
 
 	window->draw();
 	sofa->draw();
+	rotateDoor4->render();
 
 	glEndList();
 	return lid;
@@ -152,6 +158,10 @@ void display() // This function draws a triangle with RGB colors
 	transDoor->render();
 
 	fan->render();
+
+	if (!getKey){
+		keyObj->draw();
+	}
 
 	glCallList(tableList);		//显示列表
 }
@@ -457,7 +467,7 @@ void redraw()
 
     //light[1]是位置性光源（点光源），环境光可以考虑使用位置性光源
     light[1] = new Light(GL_LIGHT1);
-    light[1]->setPosition(0, 10, 0, 1);
+    light[1]->setPosition(-10, 10, 0, 1);
     light[1]->setColor(1, 1, 1, 1);
     light[1]->setDiffuseLight();
     light[1]->enable();
@@ -565,6 +575,7 @@ void objectInit() {
 	doorWall3->setTexture(wall_texture);
 	entrance->setTexture(wall_texture);
 
+
 	//各种家具
 
 	table = new Table(8, 8, 5, 0, 0, -35);
@@ -614,6 +625,9 @@ void objectInit() {
 	rotateDoor1 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 30, 90);
 	rotateDoor2 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 0, 90);
 	rotateDoor3 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -4.5, 0, -15,0);
+
+	//逃脱门
+	rotateDoor4 = new RotateDoor("Data/door1.obj", doorTexture, 13.5, 13, 1, -10, 0, 65, 0);
 
 	//各种几何体
 	sphere = new Sphere(1, 150, 150, 25, 6.5, -15);			//球体
