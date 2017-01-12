@@ -1,6 +1,9 @@
 #include "House\House.h"
+#include "ScreenShot\ScreenShot.h"
+#include "Helpers\alert.h"
 
 int SCREEN_WIDTH = 960, SCREEN_HEIGHT = 600;
+int ALERT = 0;	//0：无显示信息	1：截屏成功	2：获得钥匙
 
 float fTranslate;
 float fRotate;
@@ -78,6 +81,10 @@ ImportObj* window;
 ImportObj* sofa;
 
 Light* light[4];//OpenGL最多支持8个光源
+
+//显示提示信息
+alert *info = new alert();
+int infotime = 0;
 
 //显示列表
 GLint HouseList(){
@@ -272,6 +279,12 @@ void key(unsigned char k, int x, int y)
 		bfullscreen = !bfullscreen;
 		break;
 	}
+
+	case 'p': case 'P': {
+		SaveScreenShot();
+		ALERT = 1;
+		break;
+	}
 	}
 
 	//与墙壁的碰撞检测  
@@ -383,6 +396,25 @@ void redraw()
 	if (bAnim) fRotate += 0.05f;
 
 	FPS *fps = new FPS();
+
+	if (ALERT == 1) {
+		(*info).display("Screen Shot Success!");
+		infotime++;
+		if (infotime > 40) {
+			ALERT = 0;
+		}
+	}
+	else if (ALERT == 2) {
+		(*info).display("Get A Key!");
+		infotime++;
+		if (infotime > 40) {
+			ALERT = 0;
+		}
+	}
+	else {
+		infotime = 0;
+	}
+
 	glLoadIdentity();
 	glFlush();
 	glutSwapBuffers();
