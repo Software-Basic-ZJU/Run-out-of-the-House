@@ -267,14 +267,9 @@ void key(unsigned char k, int x, int y)
 		ALERT = 1;
 		break;
 	}
-	//case 'm':{	//开门测试
-	//			 if (rotateDoor3->getStatus()){
-	//				 rotateDoor3->closeDoor();
-	//			 }
-	//			 else
-	//				 rotateDoor3->openDoor();
-	//			 break;
-	//}
+	case 'b':{	
+		center_next[1] = eye[1];
+	}
 	case ' ': {
 		point e(5.0*eye[0], -5 * eye[2] + 5.0), c(5.0*center[0], -5 * center[2] + 5.0);
 		int opendoor = nearDoor(e, c);
@@ -543,7 +538,8 @@ void objectInit() {
 	flo->setEntryTexture(io_texture);
 
 	//天花板
-	celling = new Floor(0, 31, 0);
+	celling = new Floor(0.0f, 31.0f, 0.0f);
+
 	celling->setMainTexture(wall_texture);
 	celling->setEntryTexture(wall_texture);
 
