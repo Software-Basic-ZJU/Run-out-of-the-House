@@ -4,7 +4,6 @@
 
 int SCREEN_WIDTH = 960, SCREEN_HEIGHT = 600;
 int ALERT = 0;	//0：无显示信息	1：截屏成功	2：获得钥匙 3:成功逃脱
-bool getKey = false;		//是否拿到钥匙
 
 float fTranslate;
 float fRotate;
@@ -13,7 +12,7 @@ float fScale = 1.0f;	// set inital scale value to 1.0f
 bool bAnim = false;
 bool bWire = false;
 bool bfullscreen = false;     // 全屏标识
-bool getKey = false;
+bool getKey = false;		//是否拿到钥匙
 bool win = false;
 
 int wHeight = 0;
@@ -30,6 +29,7 @@ Cylinder *cylinder;
 Cone *cone[3];
 Prism *prism;
 Floor *flo;
+Floor *celling;
 
 Wall *entryWall1;
 Wall *entryWall2;
@@ -86,14 +86,16 @@ int infotime = 0;
 
 //显示列表
 GLint HouseList(){
-	GLfloat coeff[] = { 1.0, 0.95, 0.95, 1.0 };
+	GLfloat emission[] = { 0.2, 0.2, 0.2, 0.1 };
+	GLfloat coeff[] = { 1.0, 0.95, 0.95, 0.5 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coeff);
 	GLint lid = glGenLists(1);
 	glNewList(lid, GL_COMPILE);
 
 	//cubic->setPosition(0, 0, -4);
 	//cubic->render();
-	GLfloat spceu[] = { 1.0, 0.0, 0, 1.0 };
+	GLfloat spceu[] = { 0.5, 0.4, 0, 1.0 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spceu);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 35.0);
 	sphere->render();
@@ -106,6 +108,7 @@ GLint HouseList(){
 	prism->render();
 
 	flo->render();
+	celling->render();
 	entryWall1->render();
 	entryWall2->render();
 
@@ -129,17 +132,12 @@ GLint HouseList(){
 	roundTable->render();
 
 	//io->draw();
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 	bed1->draw();
 	bed2->draw();
 	chair1->draw();
 
 	window->draw();
 	sofa->draw();
-	rotateDoor4->render();
 
 	glEndList();
 	return lid;
@@ -150,6 +148,7 @@ void display() // This function draws a triangle with RGB colors
 	rotateDoor1->render();
 	rotateDoor2->render();
 	rotateDoor3->render();
+	rotateDoor4->render();
 
 	if (!getKey) {
 		keyObj->draw();
@@ -246,21 +245,21 @@ void key(unsigned char k, int x, int y)
 
 		//以下为上帝视角的操作，方便做几何体的定位调试，如果测试漫游请注释掉
 	case 't':{	//飞天
-				 eye[1] += 0.4f;
-				 center[1] += 0.4f;
+				 eye_next[1] += 0.4f;
+				 center_next[1] += 0.4f;
 				 break;
 	}
 	case 'g':{	//落地
-				 eye[1] -= 0.4f;
-				 center[1] -= 0.4f;
+				 eye_next[1] -= 0.4f;
+				 center_next[1] -= 0.4f;
 				 break;
 	}
 	case 'y':{  //抬头看
-				 center[1] += 0.4f;
+				 center_next[1] += 0.4f;
 				 break;
 	}
 	case 'h':{	//低头看
-				 center[1] -= 0.4f;
+				 center_next[1] -= 0.4f;
 				 break;
 	}
 	case 'p': case 'P': {
@@ -332,9 +331,10 @@ void key(unsigned char k, int x, int y)
 		case 5:
 		{
 			printf("fetching key\n");
-			if (!getKey) {
+			if (!getKey) {			//拿到钥匙
 				ALERT = 2;
 				getKey = true;
+				rotateDoor4->setTexture(doorTexture);
 			}
 			break;
 		}
@@ -381,18 +381,18 @@ void key(unsigned char k, int x, int y)
 	//point p1(-30, -30), p2(30, 30);
 	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, rotateDoor1->getStatus(), rotateDoor2->getStatus(), rotateDoor3->getStatus(), transDoor->getStatus(), getKey)) {
 		center[0] = center_next[0];
-		//center[1] = center_next[1];
+		center[1] = center_next[1];
 		center[2] = center_next[2];
 		eye[0] = eye_next[0];
-		//eye[1] = eye_next[1];
+		eye[1] = eye_next[1];
 		eye[2] = eye_next[2];
 	}
 	else {
 		center_next[0] = center[0];
-		//center_next[1] = center[1];
+		center_next[1] = center[1];
 		center_next[2] = center[2];
 		eye_next[0] = eye[0];
-		//eye_next[1] = eye[1];
+		eye_next[1] = eye[1];
 		eye_next[2] = eye[2];
 	}
 	////////////////////////////
@@ -460,35 +460,39 @@ void redraw()
     //light[0]是方向性光源
     light[0] = new Light(GL_LIGHT0); 
     light[0]->setPosition(5, 5, 5);
-    light[0]->setColor(0.8, 0.8, 0.8, 0.1);
+    light[0]->setColor(0.5, 0.5, 0.5, 1);
     light[0]->setAmbientLight();
     light[0]->setDiffuseLight();
-    light[0]->enable();
+	if (getKey){
+		light[0]->enable();
+	}
 
     //light[1]是位置性光源（点光源），环境光可以考虑使用位置性光源
     light[1] = new Light(GL_LIGHT1);
     light[1]->setPosition(-10, 10, 0, 1);
-    light[1]->setColor(1, 1, 1, 1);
+    light[1]->setColor(0.5, 0.5, 0.5, 0.5);
     light[1]->setDiffuseLight();
     light[1]->enable();
 
     //light[2]是位置性光源（点光源，聚光灯） 还有一些问题。
     light[2] = new Light(GL_LIGHT2);
-	light[2]->setPosition(eye[0], eye[1], eye[2], 1);//根据人的位置设置聚光灯的位置
+	light[2]->setPosition(eye[0], eye[1]-1, eye[2], 1);//根据人的位置设置聚光灯的位置
     light[2]->setColor(1, 1, 1, 1);
     light[2]->setDiffuseLight();
-    light[2]->setAgglomeration(100);
-    light[2]->setSpotangle(45);
-    light[2]->setLightDir(center[0], center[1], center[2]);//根据人的朝向设置聚光灯的朝向
+    light[2]->setAgglomeration(150);
+    light[2]->setSpotangle(20);
+    light[2]->setLightDir(center[0]-eye[0], center[1]-0.8, center[2]-eye[2]);//根据人的朝向设置聚光灯的朝向
     light[2]->setLimitRange();
     light[2]->enable();
 
 	//light[3]是镜面光
+	
 	light[3] = new Light(GL_LIGHT3);
 	light[3]->setPosition(0, 10, 0);
 	light[3]->setColor(1, 1, 1, 1);
 	light[3]->setSpecular();
 	light[3]->enable();
+	
 
 	glRotatef(fRotate, 0, 1.0f, 0);			// Rotate around Y axis
 	glScalef(0.2, 0.2, 0.2);
@@ -537,6 +541,11 @@ void objectInit() {
 	flo = new Floor();
 	flo->setMainTexture(io_texture);
 	flo->setEntryTexture(io_texture);
+
+	//天花板
+	celling = new Floor(0, 31, 0);
+	celling->setMainTexture(wall_texture);
+	celling->setEntryTexture(wall_texture);
 
 	entryWall1 = new Wall(1, 20, -20, 0, 55);
 	entryWall2 = new Wall(1, 20, 0, 0, 55);
@@ -627,7 +636,7 @@ void objectInit() {
 	rotateDoor3 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -4.5, 0, -15,0);
 
 	//逃脱门
-	rotateDoor4 = new RotateDoor("Data/door1.obj", doorTexture, 13.5, 13, 1, -10, 0, 65, 0);
+	rotateDoor4 = new RotateDoor("Data/door1.obj", wall_texture, 13.5, 13, 1, -10, 0, 64.5, 0);
 
 	//各种几何体
 	sphere = new Sphere(1, 150, 150, 25, 6.5, -15);			//球体
@@ -666,7 +675,7 @@ void objectInit() {
 		cone[i]->setTexture(cone_text);
 
 	//电风扇
-	fan = new ElectricFan(2, 1, 30, 18, -15);
+	fan = new ElectricFan(2, 1, 30, 19, -15);
 	fan->open();
 
 	//窗户

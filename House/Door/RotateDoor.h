@@ -17,6 +17,8 @@ public:
 		GLfloat width, GLfloat height, GLfloat thickness,
 		GLfloat x = 0, GLfloat y = 0, GLfloat z = 0, GLfloat angle = 0,
 		GLfloat speed = 1.0, bool direction = false, bool status = false);
+
+	void setTexture(GLTexture *texture);		//设置纹理
 	
 	bool getStatus();			//获取门的开闭状态
 

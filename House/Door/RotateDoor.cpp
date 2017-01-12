@@ -18,6 +18,10 @@ RotateDoor::RotateDoor(char *filename,GLTexture *texture,GLfloat width, GLfloat 
 	else this->fRotate = 0;
 }
 
+void RotateDoor::setTexture(GLTexture *texture){
+	this->door->setTexture(texture);
+}
+
 bool RotateDoor::getStatus(){
 	return this->status;
 }
