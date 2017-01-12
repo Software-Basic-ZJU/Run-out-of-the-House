@@ -1,16 +1,4 @@
-#include "Geometry\Sphere.h"
-#include "House\Floor.h"
-#include "Helpers\FPS.h"
-#include "House\Wall\Wall.h"
-#include "House\Wall\WallwithDoor.h"
-#include "House\Bed.h"
-#include "House\Table\Table.h"
-#include "House\Table\RoundTable.h"
-#include "House\Door\RotateDoor.h"
-#include "House\Door\TransDoor.h"
-#include "Model\ImportObj.h"
-#include "Model\Light.h"
-#include "Bump\Person.h"
+#include "House\House.h"
 
 int SCREEN_WIDTH = 960, SCREEN_HEIGHT = 600;
 
@@ -35,26 +23,12 @@ GLfloat viewUp = 0.0f;      //向上向下看
 //test
 
 //Cubic *cubic = new Cubic(1, 1, 3);
-//Sphere *sphere = new Sphere(1,100,100);
-//Cylinder *cylinder = new Cylinder(2,8,200);
-//Cone *cone = new Cone(1.5, 5, 100, 2, 2, 2);
-
-
-// 棱柱(棱台)测试
-GLfloat testBtm[][2] = {
-	{ 2, 2 },
-	{ 2, -2 },
-	{0,0}
-};
-GLfloat testTop[][2] = {
-	{ 3, 3 },
-	{3,-3},
-	{0,0}
-};
-//Prism *prism = new Prism(testBtm, 3, 5, testTop ,30);
-
-
+Sphere *sphere;
+Cylinder *cylinder;
+Cone *cone[3];
+Prism *prism;
 Floor *flo;
+
 Wall *entryWall1;
 Wall *entryWall2;
 
@@ -77,6 +51,8 @@ Table *table;
 RoundTable *roundTable;
 TransDoor *transDoor;
 
+ElectricFan *fan;
+
 GLTexture *doorTexture;
 RotateDoor *rotateDoor1;
 RotateDoor *rotateDoor2;
@@ -85,10 +61,10 @@ RotateDoor *rotateDoor3;
 GLTexture* io_texture;
 GLTexture* wall_texture;
 GLTexture* door_text;
-GLTexture* wall_text;
 GLTexture* bed_text;
 GLTexture* keyObj_text;
-GLTexture* chair_text;
+GLTexture* flower_text;
+GLTexture* cone_text;
 
 ImportObj* io;
 ImportObj* door;
@@ -99,29 +75,31 @@ ImportObj* chair1;
 ImportObj* chair2;
 ImportObj* keyObj;
 ImportObj* window;
+ImportObj* sofa;
 
-Light* light[3];//OpenGL最多支持8个光源
+Light* light[4];//OpenGL最多支持8个光源
 
 //显示列表
 GLint HouseList(){
-	GLfloat coeff[] = { 1.0, 0.8, 0.5, 1.0 };
-	GLfloat white[] = { 0, 0.5, 0.5, 1 };
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, coeff);
-   /* glMaterialfv(GL_FRONT, GL_AMBIENT, coeff);*/
+	GLfloat coeff[] = { 1.0, 0.95, 0.95, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, coeff);
 	GLint lid = glGenLists(1);
 	glNewList(lid, GL_COMPILE);
 
 	//cubic->setPosition(0, 0, -4);
 	//cubic->render();
-	
-	//sphere->setPosition(0, 2, 0);
-	//sphere->render();
+	GLfloat spceu[] = { 1.0, 0.0, 0, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spceu);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 35.0);
+	sphere->render();
 
-	//cylinder->render();
+	cylinder->render();
 
-	//cone->render();
+	for (int i = 0; i < 3;i++)
+		cone[i]->render();
 
-	//prism->render();
+	prism->render();
+
 	flo->render();
 	entryWall1->render();
 	entryWall2->render();
@@ -148,7 +126,11 @@ GLint HouseList(){
 	//io->draw();
 	keyObj->draw();
 	bed1->draw();
+	bed2->draw();
 	chair1->draw();
+
+	window->draw();
+	sofa->draw();
 
 	glEndList();
 	return lid;
@@ -161,6 +143,9 @@ void display() // This function draws a triangle with RGB colors
 	rotateDoor3->render();
 
 	transDoor->render();
+
+	fan->render();
+
 	glCallList(tableList);		//显示列表
 }
 
@@ -231,10 +216,14 @@ void key(unsigned char k, int x, int y)
 	}
 	case 'i': {//视角上移  
 		center_next[1] += 0.4f;
+		center[1] += 0.4f;
+
 		break;
 	}
 	case 'k': {//视角上移  
 		center_next[1] -= 0.4f;
+		center[1] -= 0.4f;
+
 		break;
 	}
 
@@ -357,17 +346,17 @@ void redraw()
     //light[0]是方向性光源
     light[0] = new Light(GL_LIGHT0); 
     light[0]->setPosition(5, 5, 5);
-    light[0]->setColor(1, 1, 1);
+    light[0]->setColor(0.8, 0.8, 0.8, 0.1);
     light[0]->setAmbientLight();
     light[0]->setDiffuseLight();
-    //light[0]->enable();
+    light[0]->enable();
 
     //light[1]是位置性光源（点光源），环境光可以考虑使用位置性光源
     light[1] = new Light(GL_LIGHT1);
-    light[1]->setPosition(0, 0, 0, 1);
-    light[1]->setColor(1, 0, 0, 1);
+    light[1]->setPosition(0, 10, 0, 1);
+    light[1]->setColor(1, 1, 1, 1);
     light[1]->setDiffuseLight();
-    //light[1]->enable();
+    light[1]->enable();
 
     //light[2]是位置性光源（点光源，聚光灯） 还有一些问题。
     light[2] = new Light(GL_LIGHT2);
@@ -376,9 +365,16 @@ void redraw()
     light[2]->setDiffuseLight();
     light[2]->setAgglomeration(100);
     light[2]->setSpotangle(45);
-    light[2]->setLightDir(center[0], 0, center[2]);//根据人的朝向设置聚光灯的朝向
+    light[2]->setLightDir(center[0], center[1], center[2]);//根据人的朝向设置聚光灯的朝向
     light[2]->setLimitRange();
     light[2]->enable();
+
+	//light[3]是镜面光
+	light[3] = new Light(GL_LIGHT3);
+	light[3]->setPosition(0, 10, 0);
+	light[3]->setColor(1, 1, 1, 1);
+	light[3]->setSpecular();
+	light[3]->enable();
 
 	glRotatef(fRotate, 0, 1.0f, 0);			// Rotate around Y axis
 	glScalef(0.2, 0.2, 0.2);
@@ -394,7 +390,7 @@ void redraw()
 
 void objectInit() {
 	io_texture = new GLTexture;
-	io_texture->Load("Data/2.bmp");
+	io_texture->Load("Data/wood2.bmp");
 
 	wall_texture = new GLTexture;
 	wall_texture->Load("Data/6.bmp");
@@ -425,6 +421,12 @@ void objectInit() {
 	roomWall3 = new Wall(29, 1, -34.5, 0, -15);
 	roomWall4 = new Wall(1, 30, 10, 0, -30);
 
+	roomWall1->setTexture(wall_texture);
+	roomWall2->setTexture(wall_texture);
+	roomWall3->setTexture(wall_texture);
+	roomWall4->setTexture(wall_texture);
+
+
 	//带门的墙
 	doorWall1 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 30, 90);
 	doorWall2 = new WallwithDoor(30.5, 1, 10, 15, -20, 0, 0, 90);
@@ -441,25 +443,33 @@ void objectInit() {
 	roundTable = new RoundTable(6, 5, 30, 0, -15);
 	transDoor = new TransDoor(30, 20, 1, -20, 0, -30, 90);
 
-	chair_text = new GLTexture;
-	chair_text->Load("data/1.bmp");
+	flower_text = new GLTexture;
+	flower_text->Load("data/flower.bmp");
 	chair1 = new ImportObj("data/chair2.obj");
-	chair1->setTexture(chair_text);
+	chair1->setTexture(flower_text);
 	chair1->setPosition(20, 0, -15);
 	chair1->setScalef(0.01, 0.01, 0.01);
 	chair1->setRotatef(90, 0, 1, 0);
 
-	roundTable->setTexuture(chair_text);
+	table->setTexture(flower_text);
+	roundTable->setTexuture(flower_text);
+	GLTexture *transDoorText = new GLTexture;
+	transDoorText->Load("data/feather.bmp");
+	transDoor->setTexture(transDoorText);
 
 	//床,长宽高={21.03,16.15,7.82} 缩小之后
 	bed_text = new GLTexture;
-	bed_text->Load("data/5.bmp");
+	bed_text->Load("data/wood3.bmp");
 
 	bed1 = new ImportObj("data/bed.obj");
 	bed1->setTexture(bed_text);
 	bed1->setScalef(0.01, 0.01, 0.01);
 	bed1->setPosition(-41, 0, 26);
-	bed1->setRotatef(0, 0, 1, 0);
+
+	bed2 = new ImportObj("data/bed1.obj");
+	bed2->setTexture(flower_text);
+	bed2->setScalef(0.005, 0.005, 0.005);
+	bed2->setPosition(-40.5, 0, -7);
 
 	//钥匙长宽高 937mm 100mm 466mm 未换算
 	keyObj_text = new GLTexture;
@@ -467,16 +477,69 @@ void objectInit() {
 
 	keyObj = new ImportObj("data/key.obj");
 	keyObj->setTexture(keyObj_text);
-	keyObj->setScalef(0.1, 0.1, 0.1);
-	keyObj->setPosition(0, 4, 0);
-	keyObj->setRotatef(0, 0, 1, 0);
+	keyObj->setScalef(0.05, 0.05, 0.05);
+	keyObj->setPosition(-44, 4, -35);
 
 	//旋转门
 	doorTexture = new GLTexture;
-	doorTexture->Load("Data/2.bmp");
+	doorTexture->Load("Data/wood2.bmp");
 	rotateDoor1 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 30, 90);
 	rotateDoor2 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -20, 0, 0, 90);
 	rotateDoor3 = new RotateDoor("Data/door1.obj",doorTexture, 13.5, 13, 1, -4.5, 0, -15,0);
+
+	//各种几何体
+	sphere = new Sphere(1, 150, 150, 25, 6.5, -15);			//球体
+	sphere->setTexture(wall_texture);
+	// 棱柱(棱台)
+	GLfloat TopFace[][2] = {
+		{ 2, 0 },
+		{ 0, -3 },
+		{ -2, 0 },
+		{ -1, 1 },
+		{ 1, 1 }
+	};
+	GLfloat BtmFace[][2] = {
+		{ 3, 0 },
+		{ 0, -4 },
+		{ -3, 0 },
+		{ -1.5, 1.5 },
+		{ 2, 2 }
+	};
+	prism = new Prism(BtmFace, 5, 5, TopFace, 30, 30, 40, 0, 10);
+	prism->rotateY(-60);
+	prism->setTexture(bed_text);
+
+	cylinder = new Cylinder(2, 4, 200, 30, 2, -6);
+	cylinder->setTexture(flower_text);
+	
+	cone_text = new GLTexture();
+	cone_text->Load("data/flower3.bmp");
+	cone[0] = new Cone(1.5, 3, 300, -5, 17.5, -15);
+	cone[0]->rotateX(90);
+	cone[1] = new Cone(1.5, 3, 300, -20, 17.5, 0);
+	cone[1]->rotateZ(-90);
+	cone[2] = new Cone(1.5, 3, 300, -20, 17.5, 30);
+	cone[2]->rotateZ(-90);
+	for (int i = 0; i < 3; i++)
+		cone[i]->setTexture(cone_text);
+
+	//电风扇
+	fan = new ElectricFan(2, 1, 30, 18, -15);
+	fan->open();
+
+	//窗户
+	window = new ImportObj("data/window2.obj");
+	window->setScalef(0.01, 0.01, 0.01);
+	window->setTexture(flower_text);
+	window->setRotatef(-90, 0, 1, 0);
+	window->setPosition(47, 2.5, 25);
+
+	//沙发
+	sofa = new ImportObj("data/Sofa.obj");
+	sofa->setScalef(0.2, 0.2, 0.2);
+	sofa->setTexture(flower_text);
+	sofa->setRotatef(90, 0, 1, 0);
+	sofa->setPosition(-43, 0, -32);
 }
 
 int main(int argc, char *argv[])

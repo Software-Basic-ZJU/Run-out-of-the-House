@@ -5,7 +5,7 @@
 //墙面（不带门)
 class Wall{
 private:
-	GLfloat height = 20;		//高固定为20
+	GLfloat height = 30;		//高固定为30
 	Geometry *cubic;				//所用到的几何体指针
 public:
 	GLfloat lenth, width;		//长宽

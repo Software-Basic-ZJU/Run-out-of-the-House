@@ -51,8 +51,8 @@ void Cone::render(){
 	if (this->texture) texture->mount();			//Ê¹ÓÃÎÆÀí
 	glPushMatrix();
 	glTranslatef(this->x, this->y, this->z);
-	glScalef(this->radius, this->height, this->radius);
 	glRotatef(this->angle,this->rotX, this->rotY, this->rotZ);
+	glScalef(this->radius, this->height, this->radius);
 	this->drawCone();
 	glPopMatrix();
 	if (this->texture) texture->unmount();

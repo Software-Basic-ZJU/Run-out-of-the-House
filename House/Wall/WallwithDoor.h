@@ -5,7 +5,7 @@
 //墙壁（带有门在正中间）
 class WallwithDoor{
 private:
-	GLfloat height = 20;		//墙高度钦定为20
+	GLfloat height = 30;		//墙高度钦定为30
 	GLfloat angle;				//绕Y轴旋转角度
 	Geometry *ltCubic, *rtCubic, *topCubic;		//左侧、右侧、上方立方体
 public:

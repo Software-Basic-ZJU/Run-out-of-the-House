@@ -67,6 +67,13 @@ ImportObj::ImportObj(char* filename)
 	}
 	fclose(fp);
 	calculateNormals();
+
+	for (int i = 0; i < 4; i++){
+		this->rotatef[i] = 0;
+	}
+	for (int i = 0; i < 3; i++){
+		this->translatef[i] = 0;
+	}
 }
 
 void ImportObj::setTexture(GLTexture* text)

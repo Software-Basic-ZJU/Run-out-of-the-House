@@ -1,7 +1,15 @@
 #include "Light.h"
 
+
 Light::Light(int lightNum)
 {
+	//color[4] = { 1.0, 1.0, 1.0, 1.0 }
+	for (int i = 0; i < 4; i++){
+		this->color[i] = 0.1;
+	}
+	//position[4] = { 5, 5, 5, 0 }
+	this->position[0] = this->position[1] = this->position[2] = 5;
+	this->position[3] = 0;
 	this->lightNum = lightNum;
 }
 
@@ -30,6 +38,10 @@ void Light::setDiffuseLight()
 	glLightfv(this->lightNum, GL_DIFFUSE, this->color);
 }
 
+void Light::setSpecular(){
+	glLightfv(this->lightNum, GL_SPECULAR, this->color);
+}
+
 //限制光照范围，达到聚光灯的效果，该函数只对位置性光源有效
 void Light::setLimitRange()
 {
@@ -53,14 +65,6 @@ void Light::setPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     glLightfv(this->lightNum, GL_POSITION, this->position);
 }
 
-void Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
-{
-	this->position[0] = x;
-	this->position[1] = y;
-	this->position[2] = z;
-    glLightfv(this->lightNum, GL_POSITION, this->position);
-}
-
 //第四个参数W是光照强度
 void Light::setColor(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
@@ -68,13 +72,6 @@ void Light::setColor(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 	this->color[1] = y;
 	this->color[2] = z;
 	this->color[3] = w;
-}
-
-void Light::setColor(GLfloat x, GLfloat y, GLfloat z)
-{
-	this->color[0] = x;
-	this->color[1] = y;
-	this->color[2] = z;
 }
 
 //向量(x,y,z)是光源发射的方向
