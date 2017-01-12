@@ -183,6 +183,10 @@ bool outCollisionToCircle(float x, float z, point &o, float r)
 	else
 		return false;
 }
+bool outCollisionToCircle(point &myEye, point &o, float r)
+{
+	return outCollisionToCircle(myEye.x, myEye.z, o, r);
+}
 bool inCollisionToSquare(float *eye, float *center, point &p1, point &p2, point &p3, point &p4)
 {
 	return false;
@@ -317,6 +321,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 	switch (roomNo) {
 	case 1: {
 		printf("in111111111111111111111\n");
+		
 		point p1(wallNS_1_lb, wallEW_2_db);
 		point p2(wallNS_2_rb, wallEW_2_ub);
 		point p3(wallNS_1_rb, wallEW_3_ub);
@@ -327,6 +332,8 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		point p8(wallNS_2_rb, door1close_db);
 		point p9(door1open_lb, door1open_db);
 		point p10(door1open_rb, door1open_ub);
+		point p11(-49.0, -36.0);
+		point p12(-35, -16);
 		if (door1_open) {
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
@@ -334,6 +341,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 			bool bump4 = outCollisionToSquare(o, p4, p7);
 			bool bump5 = outCollisionToSquare(o, p5, p8);
 			bool bump6 = outCollisionToSquare(o, p9, p10);
+			bool bump7 = outCollisionToSquare(o, p11, p12);
 			if (bump1)
 				printf("bump1\n");
 			if (bump2)
@@ -346,13 +354,14 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 				printf("bump5\n");
 			if (bump6)
 				printf("bumpdoor\n");
-			return bump1 | bump2 | bump3 | bump4 | bump5 | bump6;
+			return bump1 | bump2 | bump3 | bump4 | bump5 | bump6 | bump7;
 		}
 		else {
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
 			bool bump3 = outCollisionToSquare(o, p4, p6);
 			bool bump4 = outCollisionToSquare(o, p4, p5);
+			bool bump7 = outCollisionToSquare(o, p11, p12);
 			if (bump1)
 				printf("bump1\n");
 			if (bump2)
@@ -361,7 +370,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 				printf("bump3\n");
 			if (bump4)
 				printf("bump4\n");
-			return bump1 | bump2 | bump3 | bump4;
+			return bump1 | bump2 | bump3 | bump4 | bump7;
 		}
 		break;
 	}
@@ -377,6 +386,8 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		point p8(wallNS_2_rb, door2close_db);
 		point p9(door2open_lb, door2open_db);
 		point p10(door2open_rb, door2open_ub);
+		point p11(-49.0, 3.5);
+		point p12(-35, 15);
 		if (door2_open) {
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
@@ -384,6 +395,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 			bool bump4 = outCollisionToSquare(o, p4, p7);
 			bool bump5 = outCollisionToSquare(o, p5, p8);
 			bool bump6 = outCollisionToSquare(o, p9, p10);
+			bool bump7 = outCollisionToSquare(o, p11, p12);
 			if (bump1)
 				printf("bump1\n");
 			if (bump2)
@@ -396,14 +408,15 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 				printf("bump5\n");
 			if(bump6)
 				printf("bumpdoor\n");
-			return bump1 | bump2 | bump3 | bump4 | bump5 | bump6;
+			return bump1 | bump2 | bump3 | bump4 | bump5 | bump6 | bump7;
 		}
 		else {
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
 			bool bump3 = outCollisionToSquare(o, p4, p6);
 			bool bump4 = outCollisionToSquare(o, p4, p5);
-			return bump1 | bump2 | bump3 | bump4;
+			bool bump7 = outCollisionToSquare(o, p11, p12);
+			return bump1 | bump2 | bump3 | bump4 | bump7;
 		}
 		break;
 	}
@@ -415,21 +428,25 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		point p4(wallNS_2_rb, wallEW_5_ub);
 		point p5(wallNS_2_lb, wallEW_4_db);
 		point p6(wallNS_1_lb, wallEW_5_db);
+		point p7(-49, 46);
+		point p8(-37, 21);
 		if (wall_open) {
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
 			bool bump3 = outCollisionToSquare(o, p4, p6);
+			bool bump5 = outCollisionToSquare(o, p7, p8);
 			if (bump1)
 				printf("bump1\n");
 			if (bump2)
 				printf("bump2\n");
-			return bump1 | bump2 | bump3;
+			return bump1 | bump2 | bump3 | bump5;
 		}
 		else {
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
 			bool bump3 = outCollisionToSquare(o, p4, p6);
 			bool bump4 = outCollisionToSquare(o, p4, p5);
+			bool bump5 = outCollisionToSquare(o, p7, p8);
 			if (bump1)
 				printf("bump1\n");
 			if (bump2)
@@ -438,7 +455,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 				printf("bump3\n");
 			if (bump4)
 				printf("bump4\n");
-			return bump1 | bump2 | bump3 | bump4;
+			return bump1 | bump2 | bump3 | bump4 | bump5;
 		}
 
 
@@ -455,6 +472,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 			bool bump1 = outCollisionToSquare(o, p1, p2);
 			bool bump2 = outCollisionToSquare(o, p1, p3);
 			bool bump3 = outCollisionToSquare(o, p4, p5);
+
 			if (bump1)
 				printf("bump1\n");
 			if (bump2)
@@ -529,6 +547,9 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		point p8(door3close_rb, wallEW_4_db);
 		point p9(door3open_lb, door3open_db);
 		point p10(door3open_rb, door3open_ub);
+
+		point p11(-4, 34);
+		point p12(4, 42);
 		bool bump1, bump4, bump5;
 		if (door3_open)
 		{
@@ -541,6 +562,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		}
 		bool bump2 = outCollisionToSquare(o, p4, p5);
 		bool bump3 = outCollisionToSquare(o, p4, p6);
+		bool bump6 = outCollisionToSquare(o, p11, p12);
 		if (wall_open) {
 			bump4 = false;
 		}
@@ -557,7 +579,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 			printf("bump4\n");
 		if (bump5)
 			printf("bump5\n");
-		return bump1 | bump2 | bump3 | bump4 | bump5;
+		return bump1 | bump2 | bump3 | bump4 | bump5 | bump6;
 	}
 	case 7: {
 		printf("in777777777777777777777\n");
@@ -567,10 +589,22 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		point p4(wallNS_5_rb, wallEW_2_ub);
 		point p5(wallNS_4_lb, wallEW_2_db);
 		point p6(wallNS_5_lb, wallEW_5_ub);
+		point p7(17, 16.5);
+		point p8(23, 21.5);
+		point p9(37, -10);
+		point p10(43, -5);
+		point oOfTable(30,20);
+		point oOfChair(30,6);
+		float rOfTable = 6, rOfChair = 2;
+
 		bool bump1 = outCollisionToSquare(o, p1, p2);
 		bool bump2 = outCollisionToSquare(o, p1, p3);
 		bool bump3 = outCollisionToSquare(o, p4, p5);
 		bool bump4 = outCollisionToSquare(o, p4, p6);
+		bool bump5 = outCollisionToSquare(o, p7, p8);
+		bool bump6 = outCollisionToCircle(o, oOfChair, rOfChair);
+		bool bump7 = outCollisionToCircle(o, oOfTable, rOfTable);
+		bool bump8 = outCollisionToSquare(o, p9, p10);
 		if (bump1)
 			printf("bump1\n");
 		if (bump2)
@@ -579,7 +613,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 			printf("bump3\n");
 		if (bump4)
 			printf("bump4\n");
-		return bump1 | bump2 | bump3 | bump4;
+		return bump1 | bump2 | bump3 | bump4 | bump5 | bump6 | bump7 | bump8;
 
 		break;
 	}

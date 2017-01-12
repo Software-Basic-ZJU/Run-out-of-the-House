@@ -1,7 +1,7 @@
 #pragma once
 #include "gl/glut.h"
-#define RadiusOfPerson 0.6f
-#define StepLength 0.1f
+#define RadiusOfPerson 1.0f
+#define StepLength 0.2f
 #ifndef PI
 #define PI 3.1415926536f
 #endif

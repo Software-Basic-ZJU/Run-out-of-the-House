@@ -181,9 +181,9 @@ void idle()
 
 float center[3] = { -2.0f, 1.2f, 9.8f };
 //float eye[3] = { -2.0f, 20.0f, 13.8f };		//上帝视角
-float eye[3] = { -2.0f, 1.2f, 13.8f };	//漫游视角
+float eye[3] = { -2.0f, 1.2f, 11.8f };	//漫游视角
 float center_next[3] = { -2.0f, 1.2f, 9.8f };
-float eye_next[3] = { -2.0f, 1.2f, 13.8f };
+float eye_next[3] = { -2.0f, 1.2f, 11.8f };
 GLfloat light_spo_pos[4] = { 0,6,0,1 };
 GLfloat light_spo_dir[4] = { 0,-1,0,1 };
 GLfloat light_spo_angle = 5;
