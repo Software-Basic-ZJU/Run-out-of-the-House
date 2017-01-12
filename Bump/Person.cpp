@@ -118,10 +118,12 @@ int nearDoor(point eyePos, point centerPos)
 	point door1_center(-20.5, -30.0);
 	point door2_center(-20.5, 0.0);
 	point door3_center(-5.0, 15.5);
+	point key_Center(-40, 35);
 	localVector door124_out_n(1, 0);
 	localVector door3_out_n(0, -1);
 
 	printf("test\n");
+	
 	if (distanceBetweenPoints(eyePos, door1_center) <= minDoorRadius)
 	{
 		float ang = cosOfPoints(eyePos, centerPos, door124_out_n);
@@ -161,7 +163,16 @@ int nearDoor(point eyePos, point centerPos)
 			return 4;
 		}
 	}
-
+	if (distanceBetweenPoints(eyePos, key_Center) <= minDoorRadius)
+	{
+		float ang = cosOfPoints(eyePos, centerPos, key_Center);
+		printf("key11:%f\n", ang);
+		if (ang>maxcos)
+		{
+			printf("door111\n");
+			return 5;
+		}
+	}
 	return 0;
 }
 
@@ -261,6 +272,9 @@ int myRoonNo(float x, float z)
 	const float door1open_db = -31.0 PLUSS, door1open_ub = -30.0 PLUSS, door1open_lb = -30.0, door1open_rb = -20.0, door1close_ub = -25.0 PLUSS, door1close_db = -35.0 PLUSS;
 	const float door2open_db = 4.0 PLUSS, door2open_ub = 5.0 PLUSS, door2open_lb = -30.0, door2open_rb = -20.0, door2close_ub = 5.0 PLUSS, door2close_db = -5.0 PLUSS;
 	const float door3open_db = 15.0 PLUSS, door3open_ub = 25.0 PLUSS, door3open_lb = -1.0 MINUSS, door3open_rb = 0 MINUSS, door3close_lb = -10.0, door3close_rb = 0.0;
+	if (z < wallEW_1_db) {
+		return 20;
+	}
 	if (x >= wallNS_1_rb && x <= wallNS_2_lb) { //room 1, 2, 3
 		if (z >= wallEW_2_ub && z <= wallEW_3_db) {
 			return 1;
@@ -307,7 +321,7 @@ int myRoonNo(float x, float z)
 
 
 
-bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door3_open, bool wall_open)
+bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door3_open, bool wall_open, bool has_Key)
 {
 	int roomNo = myRoonNo(x, z);
 	const float wallNS_1_lb = -50.0, wallNS_1_rb = -49.0, wallNS_2_lb = -20.5, wallNS_2_rb = -19.5, wallNS_3_lb = -0.5, wallNS_3_rb = 0.5, wallNS_4_lb = 9.5, wallNS_4_rb = 10.5, wallNS_5_lb = 49, wallNS_5_rb = 50;
@@ -315,6 +329,7 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 	const float door1open_db = -31.0 PLUSS PLUSS, door1open_ub = -30.0 PLUSS PLUSS, door1open_lb = -30.0, door1open_rb = -20.0, door1close_ub = -25.0 PLUSS, door1close_db = -35.0 PLUSS;
 	const float door2open_db = 4.0 PLUSS, door2open_ub = 5.0 PLUSS, door2open_lb = -30.0, door2open_rb = -20.0, door2close_ub = 5.0 PLUSS, door2close_db = -5.0 PLUSS;
 	const float door3open_db = 15.0 PLUSS, door3open_ub = 25.0 PLUSS, door3open_lb = -1.0 MINUSS, door3open_rb = 0 MINUSS, door3close_lb = -10.0, door3close_rb = 0.0;
+	const float exit_door_lb = -15.0, exit_door_rb = -5.0;
 //	const float door1open_db = 0, door1open_up = 0, door1open_lb = 0, door1open_rb = 0, door1close_ub = 0, door1close_db = 0;
 
 	point o(x, z);
@@ -469,9 +484,17 @@ bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door
 		point p4(wallNS_3_rb, wallEW_2_ub);
 		point p5(wallNS_3_lb, wallEW_1_db);
 		point p6(wallNS_2_lb, wallEW_2_db);
-			bool bump1 = outCollisionToSquare(o, p1, p2);
-			bool bump2 = outCollisionToSquare(o, p1, p3);
-			bool bump3 = outCollisionToSquare(o, p4, p5);
+		point p7(exit_door_lb, wallEW_1_ub);
+		point p8(exit_door_rb, wallEW_1_db);
+		bool bump2 = outCollisionToSquare(o, p1, p3);
+		bool bump3 = outCollisionToSquare(o, p4, p5);
+		bool bump1;
+		if (has_Key) {
+			bump1 = outCollisionToSquare(o, p1, p7) | outCollisionToSquare(o, p8, p2);
+		}
+		else
+			bump1 = outCollisionToSquare(o, p1, p2);
+			
 
 			if (bump1)
 				printf("bump1\n");

@@ -12,12 +12,11 @@ float fScale = 1.0f;	// set inital scale value to 1.0f
 bool bAnim = false;
 bool bWire = false;
 bool bfullscreen = false;     // 全屏标识
+bool getKey = false;
+bool win = false;
 
 int wHeight = 0;
 int wWidth = 0;
-
-//float eye[] = { 0, 5, 20 };
-//float center[] = { 0, 0, 0 };
 
 GLint tableList = 0;
 
@@ -25,7 +24,6 @@ GLfloat theta = 0.0f;       //鼠标控制的角度
 GLfloat viewUp = 0.0f;      //向上向下看
 //test
 
-//Cubic *cubic = new Cubic(1, 1, 3);
 Sphere *sphere;
 Cylinder *cylinder;
 Cone *cone[3];
@@ -81,8 +79,6 @@ ImportObj* window;
 ImportObj* sofa;
 
 Light* light[4];//OpenGL最多支持8个光源
-
-//显示提示信息
 alert *info = new alert();
 int infotime = 0;
 
@@ -131,7 +127,7 @@ GLint HouseList(){
 	roundTable->render();
 
 	//io->draw();
-	keyObj->draw();
+
 	bed1->draw();
 	bed2->draw();
 	chair1->draw();
@@ -148,6 +144,10 @@ void display() // This function draws a triangle with RGB colors
 	rotateDoor1->render();
 	rotateDoor2->render();
 	rotateDoor3->render();
+
+	if (!getKey) {
+		keyObj->draw();
+	}
 
 	transDoor->render();
 
@@ -253,15 +253,100 @@ void key(unsigned char k, int x, int y)
 				 center[1] -= 0.4f;
 				 break;
 	}
-	case 'm':{	//开门测试
-				 if (rotateDoor3->getStatus()){
-					 rotateDoor3->closeDoor();
-				 }
-				 else
-					 rotateDoor3->openDoor();
-				 break;
+	case 'p': case 'P': {
+		SaveScreenShot();
+		ALERT = 1;
+		break;
 	}
+	//case 'm':{	//开门测试
+	//			 if (rotateDoor3->getStatus()){
+	//				 rotateDoor3->closeDoor();
+	//			 }
+	//			 else
+	//				 rotateDoor3->openDoor();
+	//			 break;
+	//}
+	case ' ': {
+		point e(5.0*eye[0], -5 * eye[2] + 5.0), c(5.0*center[0], -5 * center[2] + 5.0);
+		int opendoor = nearDoor(e, c);
 
+		switch (opendoor) {
+		case 1: {
+			printf("door1\n");
+			bool isopen = rotateDoor1->getStatus();
+			if (isopen) {
+				rotateDoor1->closeDoor();
+			}
+			else
+			{
+				rotateDoor1->openDoor();
+			}
+			break;
+		}
+		case 2: {
+			printf("door2\n");
+			bool isopen = rotateDoor2->getStatus();
+			if (isopen) {
+				rotateDoor2->closeDoor();
+			}
+			else
+			{
+				rotateDoor2->openDoor();
+			}
+			break;
+		}
+		case 3: {
+			printf("door3\n");
+			bool isopen = rotateDoor3->getStatus();
+			if (isopen) {
+				rotateDoor3->closeDoor();
+			}
+			else
+			{
+				rotateDoor3->openDoor();
+			}
+			break;
+		}
+		case 4: {
+			printf("door4\n");
+			bool isopen = transDoor->getStatus();
+			if (isopen) {
+				transDoor->closeDoor();
+			}
+			else
+			{
+				transDoor->openDoor();
+			}
+			break;
+		}
+		case 5:
+		{
+			printf("fetching key\n");
+			if (!getKey) {
+				ALERT = 2;
+				getKey = true;
+			}
+			break;
+		}
+		case 6:
+		{
+			printf("win!\n");
+			if (!win)
+			{
+				ALERT = 3;
+				win = true;
+
+			}
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+
+		break;
+	}
 	case 'f': case 'F': {
 		if (bfullscreen)
 		{
@@ -276,20 +361,15 @@ void key(unsigned char k, int x, int y)
 			SCREEN_HEIGHT = 1024;
 			glutFullScreen();
 		}
+	
 		bfullscreen = !bfullscreen;
-		break;
-	}
-
-	case 'p': case 'P': {
-		SaveScreenShot();
-		ALERT = 1;
 		break;
 	}
 	}
 
 	//与墙壁的碰撞检测  
 	//point p1(-30, -30), p2(30, 30);
-	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, rotateDoor1->getStatus(), rotateDoor2->getStatus(), rotateDoor3->getStatus(), transDoor->getStatus())) {
+	if (!CollosionTest(5.0*eye_next[0], -5 * eye_next[2]+5.0, rotateDoor1->getStatus(), rotateDoor2->getStatus(), rotateDoor3->getStatus(), transDoor->getStatus(), getKey)) {
 		center[0] = center_next[0];
 		//center[1] = center_next[1];
 		center[2] = center_next[2];
@@ -304,6 +384,17 @@ void key(unsigned char k, int x, int y)
 		eye_next[0] = eye[0];
 		//eye_next[1] = eye[1];
 		eye_next[2] = eye[2];
+	}
+	////////////////////////////
+	if(myRoonNo(5.0*eye[0], -5 * eye[2] + 5.0) == 20)
+	{
+		printf("win!\n");
+		if (!win)
+		{
+			ALERT = 3;
+			win = true;
+
+		}
 	}
 	printf("%f  %f\n", 5.0*eye[0], -5 * eye[2] + 5.0);
 }
@@ -396,7 +487,6 @@ void redraw()
 	if (bAnim) fRotate += 0.05f;
 
 	FPS *fps = new FPS();
-
 	if (ALERT == 1) {
 		(*info).display("Screen Shot Success!");
 		infotime++;
@@ -411,10 +501,16 @@ void redraw()
 			ALERT = 0;
 		}
 	}
+	else if (ALERT == 3) {
+		(*info).display("You Win!");
+		infotime++;
+		if (infotime > 40) {
+			ALERT = 0;
+		}
+	}
 	else {
 		infotime = 0;
 	}
-
 	glLoadIdentity();
 	glFlush();
 	glutSwapBuffers();

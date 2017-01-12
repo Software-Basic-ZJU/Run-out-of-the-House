@@ -24,7 +24,7 @@ struct localVector {
 	//bool outCollisionToCircle(float *eye, float *center, point &o, float r);
 	//bool inCollisionToSquare(float *eye, float *center, point &p1, point &p2, point &p3, point &p4);
 	int nearDoor(point eyePos, point centerPos);
-	bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door3_open, bool wall_open);
+	bool CollosionTest(float x, float z, bool door1_open, bool door2_open, bool door3_open, bool wall_open, bool has_Key);
 	void move(const float *eye, const float *center, float *eye_next, float *center_next, direction dir);
 	void rotate(const float *eye, const float *center, float *eye_next, float *center_next, direction dir);
 	int myRoonNo(float x, float z);
